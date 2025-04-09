@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // Compile to ECMAScript 2015 (ES6)
+    "module": "CommonJS", // Use CommonJS for module imports/exports
+    "outDir": "./dist", // Output directory for compiled JavaScript files
+    "rootDir": "./src", // Root directory for TypeScript source files
+    "strict": true, // Enable strict type-checking options
+    "esModuleInterop": true, // Enable compatibility with CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file name casing
+    "moduleResolution": "node", // Use Node.js module resolution
+    "resolveJsonModule": true, // Allow importing JSON files
+    "isolatedModules": true, // Ensure each file can be transpiled independently
+    "jsx": "react", // Enable JSX for React
+    "allowSyntheticDefaultImports": true // Allow default imports from modules without default exports
+  },
+  "include": ["src/**/*"], // Include all TypeScript files in the src directory
+  "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
+}
