@@ -1,6 +1,10 @@
 // Function to initialize the workload estimator
-function initializeWorkloadEstimator() {
-  const root = document.getElementById("root");
+class WorkloadEstimator extends HTMLElement {
+  constructor() {
+    super();
+    // Attach a shadow DOM for encapsulation
+    const shadow = this.attachShadow({ mode: 'open' });
+
 
   // Create the main container
   const style = document.createElement("style");
@@ -16,22 +20,22 @@ function initializeWorkloadEstimator() {
         margin: 0 auto;
       }
 
-        h2 {
+      h2 {
         text-align: center;
         margin-bottom: 1rem;
       }
-        .grid {
+      .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 1rem;
       }
-        .panel {
+      .panel {
         background: #f9f9f9;
         border: 1px solid #ccc;
         padding: 1rem;
         border-radius: 5px;
       }
-        label {
+      label {
         display: block;
         margin: 0.5rem 0 0.2rem;
         font-weight: bold;
@@ -63,13 +67,13 @@ function initializeWorkloadEstimator() {
         text-align: center;
         margin-top: 1rem;
       }
-
   `;
 
   /// Create main container: This will hold all the elements
-  root.appendChild(style);
+  shadow.appendChild(style);
   const container = document.createElement("div");
   container.className = "container";
+  shadow.appendChild(container);
 
 
   /// Create heading: This is the heading for the main container
@@ -100,21 +104,21 @@ courseInfoPanel.innerHTML = `
   <label for="Pages per Week">Pages per Week:</label>
   <input type="number" id="weeklyPages" value="0" min="0" />
 
-  <select for="Page Density">Page Density:</select>
+  <p5>Page Density:</p5>
   <select id="pageDensity">
     <option value="450 Words">450 Words</option>
     <option value="600 Words">600 Words</option>
     <option value="750 Words">750 Words</option>
   </select>
 
-  <select for="Difficulty">Difficulty:</select>
+  <p5>Difficulty:</p5>
   <select id="difficulty">
     <option value="No New Concepts">No New Concepts</option>
     <option value="Some New Concepts">Some New Concepts</option>
     <option value="Many New Concepts">Many New Concepts</option>
   </select>
 
-  <select for="Purpose">Purpose:</select>
+  <p5>Purpose:</p5>
   <select id="purpose">
     <option value="Survey">Survey</option>
     <option value="Understand">Understand</option>
@@ -136,25 +140,26 @@ courseInfoPanel.innerHTML = `
   <label for="Pages per Semester">Pages per Semester:</label>
   <input type="number" id="semesterPages" value="0" min="0" />
 
-  <select for="Page Density">Page Density:</select>
+  <p5>Page Density:</p5t>
   <select id="pageDensity">
     <option value="250 Words">250 Words</option>
     <option value="500 Words">500 Words</option>
   </select>
 
-  <select for="Genre">Genre:</select>
+  <p5>Genre:</p5>
   <select id="genre">
     <option value="Reflection/Narrative">Reflection/Narrative</option>
     <option value="Arguement">Arguement</option>
     <option value="Research">Research</option>
   </select>
 
-  <select for="Drafting">Drafting:</select>
+  <p5>Drafting:</p5>
   <select id="drafting">
     <option value="No Drafting">No Drafting</option>
     <option value="Minimal Drafting">Minimal Drafting</option>
     <option value="Extensive Drafting">Extensive Drafting</option>
   </select>
+
   <label for="Estimated Writing Rate">Estimated Writing Rate:</label>
   <input type="number" id="writingRate" value="0" min="0" />
   <checkbox id="manuallyAdjustWriting" checked />
@@ -179,7 +184,7 @@ courseInfoPanel.innerHTML = `
   <h3>Discussion Posts</h3>
   <label for="Posts per Week">Posts per Week:</label>
   <input type="number" id="discussionPosts" value="0" min="0" />
-  <select for="Format">Format:</select>
+  <p5>Format:</p5>
   <select id="discussionFormat">
     <option value="Text">Text</option>
     <option value="Audio/Video">Audio/Video</option>
@@ -233,56 +238,69 @@ courseInfoPanel.innerHTML = `
   `;
   container.appendChild(workloadEstimates);
 
-  // Function to calculate workload
-  function calculateWorkload() {
-    const classWeeks = parseFloat(classWeeksInput.value);
-    const weeklyPages = parseFloat(weeklyPagesInput.value);
-    const discussionPosts = parseFloat(discussionPostsInput.value);
-    const exams = parseFloat(examsInput.value);
-    const otherAssignments = parseFloat(otherAssignmentsInput.value);
-    const classMeetings = parseFloat(classMeetingsInput.value);
-
-    if (
-      isNaN(classWeeks) ||
-      isNaN(weeklyPages) ||
-      isNaN(discussionPosts) ||
-      isNaN(exams) ||
-      isNaN(otherAssignments) ||
-      isNaN(classMeetings) ||
-      classWeeks <= 0
-    ) {
-      workloadEstimates.textContent = "Please enter valid numbers.";
-      return;
+ //// Check code beyond this point
+      // Append everything to shadow root
+      shadow.appendChild(style);
+      shadow.appendChild(container);
+  
+      // Store references for later
+      this._readingPages = shadow.querySelector('#readingPages');
+      this._readingDensity = shadow.querySelector('#readingDensity');
+      this._paperCount = shadow.querySelector('#paperCount');
+      this._paperLength = shadow.querySelector('#paperLength');
+      this._postsPerWeek = shadow.querySelector('#postsPerWeek');
+      this._postLength = shadow.querySelector('#postLength');
+      this._assignmentHoursSlider = shadow.querySelector('#assignmentHoursSlider');
+      this._sliderValue = shadow.querySelector('#sliderValue');
+      this._estimatedHours = shadow.querySelector('#estimatedHours > strong');
+  
+      // Simple event listeners to update calculations
+      this._readingPages.addEventListener('input', () => this.calculateWorkload());
+      this._readingDensity.addEventListener('change', () => this.calculateWorkload());
+      this._paperCount.addEventListener('input', () => this.calculateWorkload());
+      this._paperLength.addEventListener('input', () => this.calculateWorkload());
+      this._postsPerWeek.addEventListener('input', () => this.calculateWorkload());
+      this._postLength.addEventListener('input', () => this.calculateWorkload());
+      this._assignmentHoursSlider.addEventListener('input', (e) => {
+        this._sliderValue.textContent = e.target.value;
+        this.calculateWorkload();
+      });
     }
-
-    const workload =
-      weeklyPages / classWeeks +
-      discussionPosts +
-      exams +
-      otherAssignments +
-      classMeetings;
-
-    workloadEstimates.textContent = `Estimated Workload: ${workload.toFixed(2)} hours/week`;
+  
+    connectedCallback() {
+      // Run the initial calculation on component load
+      this.calculateWorkload();
+    }
+  
+    // Basic calculation method (replace with your own logic)
+    calculateWorkload() {
+      // Example logic:
+      // reading time + writing time + discussion + other assignment hours
+  
+      const readingTime = parseInt(this._readingPages.value || '0', 10) * this.getDensityMultiplier();
+      const writingTime = parseInt(this._paperCount.value || '0', 10) * parseInt(this._paperLength.value || '0', 10) * 0.1;
+      const discussionTime = parseInt(this._postsPerWeek.value || '0', 10) * parseInt(this._postLength.value || '0', 10) * 0.05;
+      const otherAssignments = parseInt(this._assignmentHoursSlider.value || '0', 10);
+  
+      // Sum up an approximate total (very simplified)
+      const total = readingTime + writingTime + discussionTime + otherAssignments;
+  
+      // Display the total in the "Workload Estimate" section
+      this._estimatedHours.textContent = total.toFixed(1);
+    }
+  
+    // Example helper to adjust reading time based on density
+    getDensityMultiplier() {
+      switch (this._readingDensity.value) {
+        case 'low':
+          return 0.75;
+        case 'high':
+          return 1.25;
+        default:
+          return 1.0;
+      }
+    }
   }
-
-  // Add event listeners to inputs to update workload dynamically
-  [
-    classWeeksInput,
-    weeklyPagesInput,
-    discussionPostsInput,
-    examsInput,
-    otherAssignmentsInput,
-    classMeetingsInput,
-  ].forEach((input) => {
-    input.addEventListener("input", calculateWorkload);
-  });
-
-  // Append the container to the root element
-  root.appendChild(container);
-
-  // Initial calculation
-  calculateWorkload();
-}
-
-// Initialize the workload estimator when the page loads
-document.addEventListener("DOMContentLoaded", initializeWorkloadEstimator);
+  
+  // Register the custom element
+  customElements.define('workload-estimator', WorkloadEstimator);
