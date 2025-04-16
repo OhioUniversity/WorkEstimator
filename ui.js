@@ -4,6 +4,7 @@ class WorkloadEstimator extends HTMLElement {
     super();
     // Attach a shadow DOM for encapsulation
     const shadow = this.attachShadow({ mode: 'open' });
+    const open = false;
 
 
   // Create the main container
@@ -19,7 +20,7 @@ class WorkloadEstimator extends HTMLElement {
         max-width: 1200px;
         margin: 0 auto;
       }
-
+      p,
       h2 {
         text-align: center;
         margin-bottom: 1rem;
@@ -42,7 +43,6 @@ class WorkloadEstimator extends HTMLElement {
       }
 
       input[type="number"],
-      input[type="text"],
       select {
         width: 100%;
         padding: 0.4rem;
@@ -50,10 +50,11 @@ class WorkloadEstimator extends HTMLElement {
         box-sizing: border-box;
       }
 
-      .slider-container {
+      input[type="range"] {
         display: flex;
         align-items: center;
         gap: 1rem;
+        width: 100%;
         margin-bottom: 1rem;
       }
 
@@ -80,6 +81,9 @@ class WorkloadEstimator extends HTMLElement {
   const heading = document.createElement("h2");
   heading.textContent = "Enhanced Course Workload Estimator";
   container.appendChild(heading);
+  const subHeading = document.createElement("p");
+  subHeading.textContent = "Research & Design: ";
+  container.appendChild(subHeading);
 
   /// Create grid: This will hold the different columns of inputs
   const grid = document.createElement("div");
@@ -104,21 +108,21 @@ courseInfoPanel.innerHTML = `
   <label for="Pages per Week">Pages per Week:</label>
   <input type="number" id="weeklyPages" value="0" min="0" />
 
-  <p5>Page Density:</p5>
+  <label>Page Density:</label>
   <select id="pageDensity">
     <option value="450 Words">450 Words</option>
     <option value="600 Words">600 Words</option>
     <option value="750 Words">750 Words</option>
   </select>
 
-  <p5>Difficulty:</p5>
+  <label>Difficulty:</label>
   <select id="difficulty">
     <option value="No New Concepts">No New Concepts</option>
     <option value="Some New Concepts">Some New Concepts</option>
     <option value="Many New Concepts">Many New Concepts</option>
   </select>
 
-  <p5>Purpose:</p5>
+  <label>Purpose:</label>
   <select id="purpose">
     <option value="Survey">Survey</option>
     <option value="Understand">Understand</option>
@@ -127,8 +131,8 @@ courseInfoPanel.innerHTML = `
   <label for="Estimated Reading Rate">Estimated Reading Rate:</label>
   <input type="number" id="readingRate" value="0" min="0" />
 
-  <checkbox id="manuallyAdjust" unchecked />
-  <label for="manuallyAdjust">Manually Adjust Reading Rate</label>
+  <input type="checkbox" id=“readingRate”> Manually Adjust </input>
+
   `;
   grid.appendChild(readingAssignmentsPanel);
 
@@ -140,20 +144,20 @@ courseInfoPanel.innerHTML = `
   <label for="Pages per Semester">Pages per Semester:</label>
   <input type="number" id="semesterPages" value="0" min="0" />
 
-  <p5>Page Density:</p5t>
+  <label>Page Density:</label>
   <select id="pageDensity">
     <option value="250 Words">250 Words</option>
     <option value="500 Words">500 Words</option>
   </select>
 
-  <p5>Genre:</p5>
+  <label>Genre:</label>
   <select id="genre">
     <option value="Reflection/Narrative">Reflection/Narrative</option>
     <option value="Arguement">Arguement</option>
     <option value="Research">Research</option>
   </select>
 
-  <p5>Drafting:</p5>
+  <label>Drafting:</label>
   <select id="drafting">
     <option value="No Drafting">No Drafting</option>
     <option value="Minimal Drafting">Minimal Drafting</option>
@@ -162,8 +166,8 @@ courseInfoPanel.innerHTML = `
 
   <label for="Estimated Writing Rate">Estimated Writing Rate:</label>
   <input type="number" id="writingRate" value="0" min="0" />
-  <checkbox id="manuallyAdjustWriting" checked />
-  <label for="Hours Per Written Page">Hours Per Written Page</label>
+    <input type="checkbox" id=“writtingRate”> Manually Adjust </input>
+  <label for="Hours Per Written Page">Hours Per Written Page: </label>
   `;
   grid.appendChild(writingAssignmentsPanel);
 
@@ -184,7 +188,7 @@ courseInfoPanel.innerHTML = `
   <h3>Discussion Posts</h3>
   <label for="Posts per Week">Posts per Week:</label>
   <input type="number" id="discussionPosts" value="0" min="0" />
-  <p5>Format:</p5>
+  <label>Format:</label>
   <select id="discussionFormat">
     <option value="Text">Text</option>
     <option value="Audio/Video">Audio/Video</option>
@@ -194,7 +198,7 @@ courseInfoPanel.innerHTML = `
 
   <label for="Hours per Post">Estimated Hours:</label>
   <input type="number" id="hoursPerPost" value="0" min="0" />
-  <checkbox id="manuallyAdjustDiscussion" checked />
+  <input type="checkbox" id=“readingRate”> Manually Adjust </input>
   <label for="Hours Per Week">Hours Per Week:</label>
   <input type="number" id="hoursPerWeek" value="0" min="0" />
   `;
@@ -209,34 +213,46 @@ courseInfoPanel.innerHTML = `
   <input type="number" id="exams" value="0" min="0" />
   <label for="Study Hours per Exam">Study Hours per Exam:</label>
   <input type="number" id="studyHours" value="5" min="0" />
-  <checkbox id="Take-Home Exams" checked />
+    <input type="checkbox" id=“takeHomeExams”> Take-Home Exams </input>
   <label for="Exam Time Limit (in Minutes)">Exam Time Limit (in Minutes):</label>
   <input type="number" id="examTimeLimit" value="60" min="0" />
   `;
   grid.appendChild(examsPanel);
-  // Panel: Other Assignments
-  const otherAssignmentsPanel = document.createElement("div");
-  otherAssignmentsPanel.className = "panel";
-  otherAssignmentsPanel.innerHTML = `
-  `;
-  grid.appendChild(otherAssignmentsPanel);
-
-  // Panel: Class Meetings
-  const classMeetingsPanel = document.createElement("div");
-  classMeetingsPanel.className = "panel";
-  classMeetingsPanel.innerHTML = `
-  <h3>Class Meetings</h3>
-  `;
-  grid.appendChild(classMeetingsPanel);
+   // Panel: Other Assignments
+   const otherAssignmentsPanel = document.createElement("div");
+   otherAssignmentsPanel.className = "panel";
+   otherAssignmentsPanel.innerHTML = `
+ <h3> OTHER ASSIGNMENTS </h3>
+ <label for=“numberPerSemester”># Per Semester: </label>
+ <input type="number" id="numberPerSemester" value="0" min="0" />
+ <label for”hours per assignment”>Hours Per Assignment: </label>
+  <input type="range" id="hoursPerAssignment" value="0" min="0" max="50" />
+    <input type="checkbox" id=“independent”> Independent</input>
+   `;
+   grid.appendChild(otherAssignmentsPanel);
+ 
+   // Panel: Class Meetings
+   const classMeetingsPanel = document.createElement("div");
+   classMeetingsPanel.className = "panel";
+   classMeetingsPanel.innerHTML = `
+   <h3>Class Meetings</h3>
+      <label for=“meetingsPerWeek”>Live Meetings Per Week: </label>
+      <input type="number" id="meetingsPerWeek" value="0" min="0" />
+    <label for=“meeting length”>Meeting Length (Hours): </label>
+      <input type="number" id="meetingLength" value="0" min="0" />
+   `;
+   grid.appendChild(classMeetingsPanel);
 
   /// Panel : Workload Estimates
   const workloadEstimates = document.createElement("div");
-  workloadEstimates.className = "workload-estimate";
+  workloadEstimates.className = "panel";
   workloadEstimates.innerHTML = `
-  <h3>Estimated Workload</h3>
-  <div id="workloadOutput">Estimated Workload: 0 hours/week</div>
+  <h3>Workload Estimates</h3>
+  <div id="totalWorkLoad">Total: 0 hours/week</div>
+  <div id="independentWorkload">Independent: 0 hours/week</div>
+  <div id="contactWorkload">Contact: 0 hours/week</div>
   `;
-  container.appendChild(workloadEstimates);
+  grid.appendChild(workloadEstimates);
 
  //// Check code beyond this point
       // Append everything to shadow root
