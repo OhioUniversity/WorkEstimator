@@ -27,7 +27,7 @@ class WorkloadEstimator extends HTMLElement {
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-rows: repeat(4, minmax(300px, 1fr));
         gap: 1rem;
       }
       .panel {
@@ -35,6 +35,7 @@ class WorkloadEstimator extends HTMLElement {
         border: 1px solid #ccc;
         padding: 1rem;
         border-radius: 5px;
+        height: fit-content;
       }
       label {
         display: block;
