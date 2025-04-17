@@ -4,7 +4,6 @@ class WorkloadEstimator extends HTMLElement {
     super();
     // Attach a shadow DOM for encapsulation
     const shadow = this.attachShadow({ mode: 'open' });
-    const open = false;
 
 
   // Create the main container
@@ -13,28 +12,32 @@ class WorkloadEstimator extends HTMLElement {
     :host {
         display: block;
         font-family: Arial, sans-serif;
-        margin: 1rem;
+        margin: 0.5rem;
       }
 
     .container {
-        max-width: 1200px;
+        max-width: 1500px;
         margin: 0 auto;
       }
       p,
-      h2 {
+      h3 {
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.2rem;
+      }
+      h4 {
+        font-size: 1.0rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
       }
       .grid {
         display: grid;
-        grid-template-rows: repeat(4, minmax(300px, 1fr));
         gap: 1rem;
+        grid-template-columns: repeat(4, 1fr);
       }
       .panel {
         background: #f9f9f9;
         border: 1px solid #ccc;
-        padding: 1rem;
-        border-radius: 5px;
+        padding: 0.5rem;
         height: fit-content;
       }
       label {
@@ -46,8 +49,8 @@ class WorkloadEstimator extends HTMLElement {
       input[type="number"],
       select {
         width: 100%;
-        padding: 0.4rem;
-        margin-bottom: 0.8rem;
+        padding: 0.3rem;
+        margin-bottom: 0.5rem;
         box-sizing: border-box;
       }
 
@@ -79,7 +82,7 @@ class WorkloadEstimator extends HTMLElement {
 
 
   /// Create heading: This is the heading for the main container
-  const heading = document.createElement("h2");
+  const heading = document.createElement("h3");
   heading.textContent = "Enhanced Course Workload Estimator";
   container.appendChild(heading);
   const subHeading = document.createElement("p");
@@ -91,21 +94,41 @@ class WorkloadEstimator extends HTMLElement {
   grid.className = "grid";
   container.appendChild(grid);
 
+  // Create columns: This will create the four columns in the grid
+  const column1 = document.createElement("div");
+  column1.className = "column";
+  const column2 = document.createElement("div");
+  column2.className = "column";
+  const column3 = document.createElement("div");
+  column3.className = "column";
+  const column4 = document.createElement("div");
+  column4.className = "column";
+  grid.appendChild(column1);
+  grid.appendChild(column2);
+  grid.appendChild(column3);
+  grid.appendChild(column4);
+
 // Panel: Course Info
+const courseInfoHeading = document.createElement("h4");
+courseInfoHeading.textContent = "Course Info";
+column1.appendChild(courseInfoHeading);
+
 const courseInfoPanel = document.createElement("div");
 courseInfoPanel.className = "panel";
 courseInfoPanel.innerHTML = `
-  <h3>Course Info</h3>
   <label for="Class Duration (Weeks)">Class Duration (Weeks):</label>
   <input type="number" id="classWeeks" value="15" min="0" />
   `;
-  grid.appendChild(courseInfoPanel);
+  column1.appendChild(courseInfoPanel);
 
   // Panel: Reading Assignments
+  const readingAssignmentHeading = document.createElement("h4");
+  readingAssignmentHeading.textContent = "Reading Assignments";
+  column1.appendChild(readingAssignmentHeading);
+
   const readingAssignmentsPanel = document.createElement("div");
   readingAssignmentsPanel.className = "panel";
   readingAssignmentsPanel.innerHTML = `
-  <h3>Reading Assignments</h3>
   <label for="Pages per Week">Pages per Week:</label>
   <input type="number" id="weeklyPages" value="0" min="0" />
 
@@ -135,13 +158,16 @@ courseInfoPanel.innerHTML = `
   <input type="checkbox" id=“readingRate”> Manually Adjust </input>
 
   `;
-  grid.appendChild(readingAssignmentsPanel);
+  column1.appendChild(readingAssignmentsPanel);
 
   // Panel: Writing Assignments
+  const writingAssignmentHeading = document.createElement("h4");
+  writingAssignmentHeading.textContent = "Writing Assignments";
+  column2.appendChild(writingAssignmentHeading);
+
   const writingAssignmentsPanel = document.createElement("div");
   writingAssignmentsPanel.className = "panel";
   writingAssignmentsPanel.innerHTML = `
-  <h3>Writing Assignments</h3>
   <label for="Pages per Semester">Pages per Semester:</label>
   <input type="number" id="semesterPages" value="0" min="0" />
 
@@ -170,23 +196,29 @@ courseInfoPanel.innerHTML = `
     <input type="checkbox" id=“writtingRate”> Manually Adjust </input>
   <label for="Hours Per Written Page">Hours Per Written Page: </label>
   `;
-  grid.appendChild(writingAssignmentsPanel);
+  column2.appendChild(writingAssignmentsPanel);
 
   // Panel: Videos/Podcasts
+  const videosPanelHeading = document.createElement("h4");
+  videosPanelHeading.textContent = "Videos/Podcasts";
+  column2.appendChild(videosPanelHeading);
+
   const videosPanel = document.createElement("div");
   videosPanel.className = "panel";
-  videosPanel.innerHTML = `
-  <h3>Videos/Podcasts</h3>  
+  videosPanel.innerHTML = ` 
   <label for="Hours per Week">Hours per Week:</label>
   <input type="number" id="weeklyVideos" value="0" min="0" />
   `;
-  grid.appendChild(videosPanel);
+  column2.appendChild(videosPanel);
 
   // Panel: Discussion Posts
+  const discussionPostsHeading = document.createElement("h4");
+  discussionPostsHeading.textContent = "Discussion Posts";
+  column3.appendChild(discussionPostsHeading);
+
   const discussionPostsPanel = document.createElement("div");
   discussionPostsPanel.className = "panel";
   discussionPostsPanel.innerHTML = `
-  <h3>Discussion Posts</h3>
   <label for="Posts per Week">Posts per Week:</label>
   <input type="number" id="discussionPosts" value="0" min="0" />
   <label>Format:</label>
@@ -203,13 +235,16 @@ courseInfoPanel.innerHTML = `
   <label for="Hours Per Week">Hours Per Week:</label>
   <input type="number" id="hoursPerWeek" value="0" min="0" />
   `;
-  grid.appendChild(discussionPostsPanel);
+  column3.appendChild(discussionPostsPanel);
 
   // Panel: Exams
+  const examsHeading = document.createElement("h4");
+  examsHeading.textContent = "Exams";
+  column3.appendChild(examsHeading);
+
   const examsPanel = document.createElement("div");
   examsPanel.className = "panel";
   examsPanel.innerHTML = `
-  <h3>Exams</h3>
   <label for="Exams per Semester">Exams per Semester:</label>
   <input type="number" id="exams" value="0" min="0" />
   <label for="Study Hours per Exam">Study Hours per Exam:</label>
@@ -218,42 +253,52 @@ courseInfoPanel.innerHTML = `
   <label for="Exam Time Limit (in Minutes)">Exam Time Limit (in Minutes):</label>
   <input type="number" id="examTimeLimit" value="60" min="0" />
   `;
-  grid.appendChild(examsPanel);
+  column3.appendChild(examsPanel);
+
    // Panel: Other Assignments
+    const otherAssignmentsHeading = document.createElement("h4");
+    otherAssignmentsHeading.textContent = "Other Assignments";
+    column4.appendChild(otherAssignmentsHeading);
+
    const otherAssignmentsPanel = document.createElement("div");
    otherAssignmentsPanel.className = "panel";
    otherAssignmentsPanel.innerHTML = `
- <h3> OTHER ASSIGNMENTS </h3>
  <label for=“numberPerSemester”># Per Semester: </label>
  <input type="number" id="numberPerSemester" value="0" min="0" />
  <label for”hours per assignment”>Hours Per Assignment: </label>
   <input type="range" id="hoursPerAssignment" value="0" min="0" max="50" />
     <input type="checkbox" id=“independent”> Independent</input>
    `;
-   grid.appendChild(otherAssignmentsPanel);
+   column4.appendChild(otherAssignmentsPanel);
  
    // Panel: Class Meetings
+    const classMeetingsHeading = document.createElement("h4");
+    classMeetingsHeading.textContent = "Class Meetings";
+    column4.appendChild(classMeetingsHeading);
+
    const classMeetingsPanel = document.createElement("div");
    classMeetingsPanel.className = "panel";
    classMeetingsPanel.innerHTML = `
-   <h3>Class Meetings</h3>
       <label for=“meetingsPerWeek”>Live Meetings Per Week: </label>
       <input type="number" id="meetingsPerWeek" value="0" min="0" />
-    <label for=“meeting length”>Meeting Length (Hours): </label>
+      <label for=“meeting length”>Meeting Length (Hours): </label>
       <input type="number" id="meetingLength" value="0" min="0" />
    `;
-   grid.appendChild(classMeetingsPanel);
+   column4.appendChild(classMeetingsPanel);
 
   /// Panel : Workload Estimates
+  const workloadEstimatesHeading = document.createElement("h4");
+  workloadEstimatesHeading.textContent = "Workload Estimates";
+  column4.appendChild(workloadEstimatesHeading);
+
   const workloadEstimates = document.createElement("div");
   workloadEstimates.className = "panel";
   workloadEstimates.innerHTML = `
-  <h3>Workload Estimates</h3>
-  <div id="totalWorkLoad">Total: 0 hours/week</div>
-  <div id="independentWorkload">Independent: 0 hours/week</div>
-  <div id="contactWorkload">Contact: 0 hours/week</div>
+    <div id="totalWorkLoad">Total: 0 hours/week</div>
+    <div id="independentWorkload">Independent: 0 hours/week</div>
+    <div id="contactWorkload">Contact: 0 hours/week</div>
   `;
-  grid.appendChild(workloadEstimates);
+  column4.appendChild(workloadEstimates);
 
  //// Check code beyond this point
       // Append everything to shadow root
