@@ -153,9 +153,11 @@ courseInfoPanel.innerHTML = `
     <option value="Engage">Engage</option>
   </select>
   <label for="Estimated Reading Rate">Estimated Reading Rate:</label>
-  <input type="number" id="readingRate" value="0" min="0" />
+  <p>{{readingRate}} pages per hour</p>
 
   <input type="checkbox" id=“readingRate”> Manually Adjust </input>
+  <label for="pagesPerHour">Pages Read Per Hour:</label>
+  <input type="number" id="pagesPerHour" value="10" min="0" />
 
   `;
   column1.appendChild(readingAssignmentsPanel);
@@ -195,6 +197,7 @@ courseInfoPanel.innerHTML = `
   <input type="number" id="writingRate" value="0" min="0" />
     <input type="checkbox" id=“writtingRate”> Manually Adjust </input>
   <label for="Hours Per Written Page">Hours Per Written Page: </label>
+  <input type="number" id="hoursPerPage" value="0.5" min="0" />
   `;
   column2.appendChild(writingAssignmentsPanel);
 
@@ -233,7 +236,8 @@ courseInfoPanel.innerHTML = `
   <input type="number" id="hoursPerPost" value="0" min="0" />
   <input type="checkbox" id=“readingRate”> Manually Adjust </input>
   <label for="Hours Per Week">Hours Per Week:</label>
-  <input type="number" id="hoursPerWeek" value="0" min="0" />
+  <input type="number" id="hoursPerWeek" value="1" min="0" />
+
   `;
   column3.appendChild(discussionPostsPanel);
 
@@ -294,9 +298,9 @@ courseInfoPanel.innerHTML = `
   const workloadEstimates = document.createElement("div");
   workloadEstimates.className = "panel";
   workloadEstimates.innerHTML = `
-    <div id="totalWorkLoad">Total: 0 hours/week</div>
-    <div id="independentWorkload">Independent: 0 hours/week</div>
-    <div id="contactWorkload">Contact: 0 hours/week</div>
+    <div id="totalWorkLoad">Total: {{totalWorkLoad}} hours/week</div>
+    <div id="independentWorkload">Independent: {{independentWorkLoad}} hours/week</div>
+    <div id="contactWorkload">Contact: {{contactWorkload}} hours/week</div>
   `;
   column4.appendChild(workloadEstimates);
 
@@ -339,8 +343,8 @@ courseInfoPanel.innerHTML = `
       // Example logic:
       // reading time + writing time + discussion + other assignment hours
   
-      const readingTime = parseInt(this._readingPages.value || '0', 10) * this.getDensityMultiplier();
-      const writingTime = parseInt(this._paperCount.value || '0', 10) * parseInt(this._paperLength.value || '0', 10) * 0.1;
+      const readingRate = parseInt(this._readingPages.value || '0', 10) * this.getDensityMultiplier();
+      const writingRate = parseInt(this._paperCount.value || '0', 10) * parseInt(this._paperLength.value || '0', 10) * 0.1;
       const discussionTime = parseInt(this._postsPerWeek.value || '0', 10) * parseInt(this._postLength.value || '0', 10) * 0.05;
       const otherAssignments = parseInt(this._assignmentHoursSlider.value || '0', 10);
   
