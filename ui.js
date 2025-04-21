@@ -2,6 +2,14 @@
 class WorkloadEstimator extends HTMLElement {
   constructor() {
     super();
+    // Initialize default values
+    this.total = 0;
+    this.independent = 0;
+    this.contact = 0;
+    this.readingRate = 67; // Default reading rate in pages per hour
+    this.writingRate = 0.75; // Default writing rate in pages per hour 
+    this.hoursPerWeekDiscussion = 0; // Default discussion rate in hours per week
+
     // Attach a shadow DOM for encapsulation
     const shadow = this.attachShadow({ mode: 'open' });
 
@@ -162,11 +170,16 @@ class WorkloadEstimator extends HTMLElement {
     <option value="Engage">Engage</option>
   </select>
   <label for="Estimated Reading Rate">Estimated Reading Rate:</label>
-  <p>{ {readingRate}} pages per hour</p>
+  <p> ${this.readingRate} pages per hour</p>
 
-  <input type="checkbox" id="readingRate"> Manually Adjust </input>
-  <label for="pagesPerHour">Pages Read Per Hour:</label>
-  <input type="number" id="pagesPerHour" value="10" min="0" />
+  <div id="readingRatePanel">
+  <label for="readingRate">Manually Adjust Reading Rate:</label>
+  <input type="checkbox" id="readingRate" />
+  <div id="readingRateContainer" style="display: none;">
+    <label for="pagesPerHour">Pages Read Per Hour:</label>
+    <input type="number" id="pagesPerHour" value="10" min="0" />
+  </div>
+</div>
 
   `;
     column1.appendChild(readingAssignmentsPanel);
@@ -203,10 +216,15 @@ class WorkloadEstimator extends HTMLElement {
   </select>
 
   <label for="Estimated Writing Rate">Estimated Writing Rate:</label>
-  <p>{ {writingRate}} pages per hour</p>
-    <input type="checkbox" id="writingRate"> Manually Adjust </input>
-  <label for="Hours Per Written Page">Hours Per Written Page: </label>
-  <input type="number" id="hoursPerPage" value="0.5" min="0" />
+  <p> ${this.writingRate} pages per hour</p>
+    <div id="writingRatePanel">
+  <label for="writingRate">Manually Adjust Writing Rate:</label>
+  <input type="checkbox" id="writingRate" />
+  <div id="writingRateContainer" style="display: none;">
+    <label for="hoursPerPage">Hours Per Written Page:</label>
+    <input type="number" id="hoursPerPage" value="0.5" min="0" />
+  </div>
+</div>
   `;
     column2.appendChild(writingAssignmentsPanel);
 
@@ -242,10 +260,15 @@ class WorkloadEstimator extends HTMLElement {
   <input type="number" id="avgLength" value="250" min="0" />
 
   <label for="Hours per Post">Estimated Hours:</label>
-  <p>{ {hoursPerWeekDiscussion}} pages / week</p>
-  <input type="checkbox" id="discussionRate"> Manually Adjust </input>
-  <label for="Hours Per Week">Hours Per Week:</label>
-  <input type="number" id="hoursPerWeek" value="1" min="0" />
+  <p> ${this.hoursPerWeekDiscussion} pages / week</p>
+<div id="discussionRatePanel">
+  <label for="discussionRate">Manually Adjust Discussion Rate:</label>
+  <input type="checkbox" id="discussionRate" />
+  <div id="discussionRateContainer" style="display: none;">
+    <label for="hoursPerWeek">Hours Per Week:</label>
+    <input type="number" id="hoursPerWeek" value="1" min="0" />
+  </div>
+</div>
 
   `;
     column3.appendChild(discussionPostsPanel);
@@ -258,13 +281,21 @@ class WorkloadEstimator extends HTMLElement {
     const examsPanel = document.createElement("div");
     examsPanel.className = "panel";
     examsPanel.innerHTML = `
-  <label for="Exams per Semester">Exams per Semester:</label>
+  <div id="examsPanel">
+  <label for="exams">Exams per Semester:</label>
   <input type="number" id="exams" value="0" min="0" />
-  <label for="Study Hours per Exam">Study Hours per Exam:</label>
+
+  <label for="studyHours">Study Hours per Exam:</label>
   <input type="number" id="studyHours" value="5" min="0" />
-    <input type="checkbox" id="takeHomeExams"> Take-Home Exams </input>
-  <label for="Exam Time Limit (in Minutes)">Exam Time Limit (in Minutes):</label>
-  <input type="number" id="examTimeLimit" value="60" min="0" />
+
+  <label for="takeHomeExams">Take-Home Exams:</label>
+  <input type="checkbox" id="takeHomeExams" />
+
+  <div id="takeHomeExamsContainer" style="display: none;">
+    <label for="examTimeLimit">Exam Time Limit (in Minutes):</label>
+    <input type="number" id="examTimeLimit" value="60" min="0" />
+  </div>
+</div>
   `;
     column3.appendChild(examsPanel);
 
@@ -307,10 +338,10 @@ class WorkloadEstimator extends HTMLElement {
     const workloadEstimates = document.createElement("div");
     workloadEstimates.className = "panel";
     workloadEstimates.innerHTML = `
-    <div id="totalWorkLoad">Total: {{totalWorkLoad}} hours/week</div>
-    <div id="independentWorkload">Independent: {{independentWorkLoad}} hours/week</div>
-    <div id="contactWorkload">Contact: {{contactWorkload}} hours/week</div>
-  `;
+      <div id="total">Total: ${this.total} hours/week</div>
+      <div id="independent">Independent: ${this.independent} hours/week</div>
+      <div id="contact">Contact: ${this.contact} hours/week</div>
+    `;
     column4.appendChild(workloadEstimates);
 
     // Append everything to shadow root
@@ -367,15 +398,62 @@ class WorkloadEstimator extends HTMLElement {
   connectedCallback() {
     // Run the initial calculation on component load
     this.calculateWorkload();
+
+    // Add event listeners for checkboxes
+    this.shadowRoot.querySelector('#readingRate').addEventListener('change', (e) => {
+      const container = this.shadowRoot.querySelector('#readingRateContainer');
+      if (e.target.checked) {
+        container.style.display = 'block';
+        this.shadowRoot.querySelector('#pagesPerHour').addEventListener('input', this.calculateWorkload.bind(this));
+      } else {
+        container.style.display = 'none';
+        this.calculateWorkload(); // Recalculate with default rate
+      }
+    });
+
+    this.shadowRoot.querySelector('#writingRate').addEventListener('change', (e) => {
+      const container = this.shadowRoot.querySelector('#writingRateContainer');
+      if (e.target.checked) {
+        container.style.display = 'block';
+        this.shadowRoot.querySelector('#hoursPerPage').addEventListener('input', this.calculateWorkload.bind(this));
+      } else {
+        container.style.display = 'none';
+        this.calculateWorkload(); // Recalculate with default rate
+      }
+    });
+
+    this.shadowRoot.querySelector('#discussionRate').addEventListener('change', (e) => {
+      const container = this.shadowRoot.querySelector('#discussionRateContainer');
+      if (e.target.checked) {
+        container.style.display = 'block';
+        this.shadowRoot.querySelector('#hoursPerWeek').addEventListener('input', this.calculateWorkload.bind(this));
+      } else {
+        container.style.display = 'none';
+        this.calculateWorkload(); // Recalculate with default rate
+      }
+    });
+
+    this.shadowRoot.querySelector('#takeHomeExams').addEventListener('change', (e) => {
+      const container = this.shadowRoot.querySelector('#takeHomeExamsContainer');
+      if (e.target.checked) {
+        container.style.display = 'block';
+        this.shadowRoot.querySelector('#examTimeLimit').addEventListener('input', this.calculateWorkload.bind(this));
+      } else {
+        container.style.display = 'none';
+        this.calculateWorkload(); // Recalculate without the exam time limit
+      }
+    });
   }
 
   calculateWorkload() {
+    console.log('Calculating workload...');
+
     // Reading workload calculation
     const pagesPerWeek = parseInt(this._readingPages.value || '0', 10);
     const manualReadingRate = this.shadowRoot.querySelector('#readingRate').checked;
     const readingRate = manualReadingRate
       ? parseInt(this.shadowRoot.querySelector('#pagesPerHour').value || '0', 10)
-      : 1 / (this.getDensityMultiplier() * this.getDifficultyMultiplier());
+      : 67;
     const readingTime = pagesPerWeek / readingRate;
 
     // Writing workload calculation
@@ -383,43 +461,47 @@ class WorkloadEstimator extends HTMLElement {
     const manualWritingRate = this.shadowRoot.querySelector('#writingRate').checked;
     const writingRate = manualWritingRate
       ? parseFloat(this.shadowRoot.querySelector('#hoursPerPage').value || '0.5')
-      : this.getDraftingMultiplier();
+      : 0.75;
     const writingTime = paperCount * writingRate;
 
     // Discussion workload calculation
     const postsPerWeek = parseInt(this._discussionPosts.value || '0', 10);
     const postLength = parseInt(this._avgLength.value || '0', 10);
     const manualDiscussionRate = this.shadowRoot.querySelector('#discussionRate').checked;
-    const discussionTime = manualDiscussionRate
+    const discussionRate = manualDiscussionRate
       ? parseFloat(this.shadowRoot.querySelector('#hoursPerWeek').value || '1')
-      : postsPerWeek * postLength * 0.05;
+      : postLength * 0.05;
+    const discussionTime = postsPerWeek * discussionRate;
+
+    // Exams workload calculation
+    const exams = parseInt(this._exams.value || '0', 10);
+    const studyHours = parseFloat(this._studyHours.value || '0', 10);
+    const takeHomeExams = this.shadowRoot.querySelector('#takeHomeExams').checked;
+    const examTimeLimit = takeHomeExams
+      ? parseFloat(this.shadowRoot.querySelector('#examTimeLimit').value || '0', 10) / 60 // Convert minutes to hours
+      : 0;
+    const examsTime = exams * (studyHours + examTimeLimit);
 
     // Other assignments workload calculation
     const otherAssignments = parseInt(this._hoursPerAssignment.value || '0', 10);
 
     // Total workload calculation
-    const total = readingTime + writingTime + discussionTime + otherAssignments;
+    const total = readingTime + writingTime + discussionTime + examsTime + otherAssignments;
 
     // Independent workload calculation
     const independent = readingTime + writingTime + otherAssignments;
 
     // Contact workload calculation
-    const contact = discussionTime;
+    const contact = discussionTime + examsTime;
 
     // Update the workload estimates in the UI
     this.updateWorkloadEstimates(total, independent, contact);
-
-    // Update specific panels
-    this.shadowRoot.querySelector('#readingRatePanel').innerHTML = `Reading Time: ${readingTime.toFixed(1)} hours/week`;
-    this.shadowRoot.querySelector('#writingRatePanel').innerHTML = `Writing Time: ${writingTime.toFixed(1)} hours/week`;
-    this.shadowRoot.querySelector('#discussionRatePanel').innerHTML = `Discussion Time: ${discussionTime.toFixed(1)} hours/week`;
-    this.shadowRoot.querySelector('#otherAssignmentsPanel').innerHTML = `Other Assignments: ${otherAssignments.toFixed(1)} hours/week`;
   }
 
   updateWorkloadEstimates(total, independent, contact) {
-    this.shadowRoot.querySelector('#totalWorkLoad').innerHTML = `Total: ${total.toFixed(1)} hours/week`;
-    this.shadowRoot.querySelector('#independentWorkload').innerHTML = `Independent: ${independent.toFixed(1)} hours/week`;
-    this.shadowRoot.querySelector('#contactWorkload').innerHTML = `Contact: ${contact.toFixed(1)} hours/week`;
+    this.shadowRoot.querySelector('#total').innerHTML = `Total: ${total.toFixed(1)} hours/week`;
+    this.shadowRoot.querySelector('#independent').innerHTML = `Independent: ${independent.toFixed(1)} hours/week`;
+    this.shadowRoot.querySelector('#contact').innerHTML = `Contact: ${contact.toFixed(1)} hours/week`;
   }
 
   // Helper to adjust reading time based on density
