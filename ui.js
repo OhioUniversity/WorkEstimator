@@ -37,9 +37,9 @@ class WorkloadEstimator extends HTMLElement {
     this.total = 0
     this.independent = 0
     this.contact = 0
-    this.readingRate = 67; // Default reading rate in pages per hour
-    this.writingRate = 0.75; // Default writing rate in hours per page
-    this.hoursPerWeekDiscussion = 0; // Default discussion rate in hours per week
+    this.readingRate = 67; 
+    this.writingRate = 0.75; 
+    this.hoursPerWeekDiscussion = 0; 
 
     // Attach a shadow DOM for encapsulation
     const shadow = this.attachShadow({ mode: 'open' })
@@ -104,6 +104,15 @@ class WorkloadEstimator extends HTMLElement {
         margin: 0.5rem 0;
       }
 
+      datalist {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      datalist option {
+        text-align: center;
+      }
+
       input[type="checkbox"] {
         margin-right: 0.5rem;
       }
@@ -120,6 +129,9 @@ class WorkloadEstimator extends HTMLElement {
         margin-top: 1rem;
         font-weight: bold;
         font-size: 1.1rem;
+      }
+      .hidden {
+        display: none;
       }
     `
 
@@ -177,42 +189,44 @@ class WorkloadEstimator extends HTMLElement {
     const readingAssignmentsPanel = document.createElement('div')
     readingAssignmentsPanel.className = 'panel'
     readingAssignmentsPanel.innerHTML = `
-  <label for="Pages per Week">Pages per Week:</label>
-  <input type="number" id="weeklyPages" value="0" min="0" />
+  <label for="weeklyPagesInput">Pages per Week:</label>
+  <input type="number" id="weeklyPagesInput" value="0" min="0" />
 
   <label>Page Density:</label>
-  <select id="pageDensity">
+  <select id="pageDensitySelect">
     <option value="450 Words">450 Words</option>
     <option value="600 Words">600 Words</option>
     <option value="750 Words">750 Words</option>
   </select>
 
   <label>Difficulty:</label>
-  <select id="difficulty">
+  <select id="difficultySelect">
     <option value="No New Concepts">No New Concepts</option>
     <option value="Some New Concepts">Some New Concepts</option>
     <option value="Many New Concepts">Many New Concepts</option>
   </select>
 
   <label>Purpose:</label>
-  <select id="purpose">
+  <select id="purposeSelect">
     <option value="Survey">Survey</option>
     <option value="Understand">Understand</option>
     <option value="Engage">Engage</option>
   </select>
-  <label for="Estimated Reading Rate">Estimated Reading Rate:</label>
-  <p> ${this.readingRate} pages per hour</p>
+
+  <label for="readingRateDisplay">Estimated Reading Rate:</label>
+  <div id="readingRateDisplay">
+    <p>${this.readingRate} pages per hour</p>
+  </div>
 
   <div id="readingRatePanel">
-  <label for="readingRate">Manually Adjust Reading Rate:</label>
-  <input type="checkbox" id="readingRate" />
-  <div id="readingRateContainer" style="display: none;">
-    <label for="pagesPerHour">Pages Read Per Hour:</label>
-    <input type="number" id="pagesPerHour" value="10" min="0" />
+    <label for="readingRateCheckbox">Manually Adjust Reading Rate:</label>
+    <input type="checkbox" id="readingRateCheckbox" />
+    <div id="readingRateContainer" class="hidden"">
+      <label for="pagesPerHourInput">Pages Read Per Hour:</label>
+      <input type="number" id="pagesPerHourInput" value="10" min="0" />
+    </div>
   </div>
-</div>
-
-  `
+`;
     column1.appendChild(readingAssignmentsPanel)
 
     // Panel: Writing Assignments
@@ -223,40 +237,43 @@ class WorkloadEstimator extends HTMLElement {
     const writingAssignmentsPanel = document.createElement('div')
     writingAssignmentsPanel.className = 'panel'
     writingAssignmentsPanel.innerHTML = `
-  <label for="Pages per Semester">Pages per Semester:</label>
-  <input type="number" id="semesterPages" value="0" min="0" />
+  <label for="semesterPagesInput">Pages per Semester:</label>
+  <input type="number" id="semesterPagesInput" value="0" min="0" />
 
   <label>Page Density:</label>
-  <select id="pageDensityWriting">
+  <select id="pageDensityWritingSelect">
     <option value="250 Words">250 Words</option>
     <option value="500 Words">500 Words</option>
   </select>
 
   <label>Genre:</label>
-  <select id="genre">
+  <select id="genreSelect">
     <option value="Reflection/Narrative">Reflection/Narrative</option>
-    <option value="Arguement">Arguement</option>
+    <option value="Argument">Argument</option>
     <option value="Research">Research</option>
   </select>
 
   <label>Drafting:</label>
-  <select id="drafting">
+  <select id="draftingSelect">
     <option value="No Drafting">No Drafting</option>
     <option value="Minimal Drafting">Minimal Drafting</option>
     <option value="Extensive Drafting">Extensive Drafting</option>
   </select>
 
-  <label for="Estimated Writing Rate">Estimated Writing Rate:</label>
-  <p> ${this.writingRate} pages per hour</p>
-    <div id="writingRatePanel">
-  <label for="writingRate">Manually Adjust Writing Rate:</label>
-  <input type="checkbox" id="writingRate" />
-  <div id="writingRateContainer" style="display: none;">
-    <label for="hoursPerPage">Hours Per Written Page:</label>
-    <input type="number" id="hoursPerPage" value="0.5" min="0" />
+  <label for="writingRateDisplay">Estimated Writing Rate:</label>
+  <div id="writingRateDisplay">
+    <p>${this.writingRate} hours per page</p>
   </div>
-</div>
-  `
+
+  <div id="writingRatePanel">
+    <label for="writingRateCheckbox">Manually Adjust Writing Rate:</label>
+    <input type="checkbox" id="writingRateCheckbox" />
+    <div id="writingRateContainer" class="hidden"">
+      <label for="hoursPerPageInput">Hours Per Written Page:</label>
+      <input type="number" id="hoursPerPageInput" value="0.5" min="0" />
+    </div>
+  </div>
+`;
     column2.appendChild(writingAssignmentsPanel)
 
     // Panel: Videos/Podcasts
@@ -268,7 +285,7 @@ class WorkloadEstimator extends HTMLElement {
     videosPanel.className = 'panel'
     videosPanel.innerHTML = ` 
   <label for="Hours per Week">Hours per Week:</label>
-  <input type="number" id="weeklyVideos" value="0" min="0" />
+  <input type="number" id="weeklyVideosInput" value="0" min="0" />
   `
     column2.appendChild(videosPanel)
 
@@ -280,28 +297,39 @@ class WorkloadEstimator extends HTMLElement {
     const discussionPostsPanel = document.createElement('div')
     discussionPostsPanel.className = 'panel'
     discussionPostsPanel.innerHTML = `
-  <label for="Posts per Week">Posts per Week:</label>
-  <input type="number" id="discussionPosts" value="0" min="0" />
+  <label for="discussionPostsInput">Posts per Week:</label>
+  <input type="number" id="discussionPostsInput" value="0" min="0" />
+
   <label>Format:</label>
-  <select id="discussionFormat">
+  <select id="discussionFormatSelect">
     <option value="Text">Text</option>
     <option value="Audio/Video">Audio/Video</option>
   </select>
-  <label for="Avg. Length Words">Avg. Length (Words):</label>
-  <input type="number" id="avgLength" value="250" min="0" />
 
-  <label for="Hours per Post">Estimated Hours:</label>
-  <p> ${this.hoursPerWeekDiscussion} pages / week</p>
-<div id="discussionRatePanel">
-  <label for="discussionRate">Manually Adjust Discussion Rate:</label>
-  <input type="checkbox" id="discussionRate" />
-  <div id="discussionRateContainer" style="display: none;">
-    <label for="hoursPerWeek">Hours Per Week:</label>
-    <input type="number" id="hoursPerWeek" value="1" min="0" />
+  <div id="textInputContainer">
+    <label for="avgLengthInput">Avg. Length (Words):</label>
+    <input type="number" id="avgLengthInput" value="250" min="0" />
   </div>
-</div>
 
-  `
+  <div id="audioInputContainer" class="hidden">
+    <label for="avgLengthMinutesInput">Avg. Length (Minutes):</label>
+    <input type="number" id="avgLengthMinutesInput" value="5" min="0" />
+  </div>
+
+  <label for="hoursPerWeekDiscussionDisplay">Estimated Hours:</label>
+  <div id="hoursPerWeekDiscussionDisplay">
+    <p>${this.hoursPerWeekDiscussion} hours/week</p>
+  </div>
+
+  <div id="discussionRatePanel">
+    <label for="discussionRateCheckbox">Manually Adjust Discussion Rate:</label>
+    <input type="checkbox" id="discussionRateCheckbox" />
+    <div id="discussionRateContainer" class="hidden">
+      <label for="hoursPerWeekInput">Hours Per Week:</label>
+      <input type="number" id="hoursPerWeekInput" value="1" min="0" />
+    </div>
+  </div>
+`;
     column3.appendChild(discussionPostsPanel)
 
     // Panel: Exams
@@ -312,22 +340,20 @@ class WorkloadEstimator extends HTMLElement {
     const examsPanel = document.createElement('div')
     examsPanel.className = 'panel'
     examsPanel.innerHTML = `
-  <div id="examsPanel">
-  <label for="exams">Exams per Semester:</label>
-  <input type="number" id="exams" value="0" min="0" />
+  <label for="examsInput">Exams per Semester:</label>
+  <input type="number" id="examsInput" value="0" min="0" />
 
-  <label for="studyHours">Study Hours per Exam:</label>
-  <input type="number" id="studyHours" value="5" min="0" />
+  <label for="studyHoursInput">Study Hours per Exam:</label>
+  <input type="number" id="studyHoursInput" value="5" min="0" />
 
-  <label for="takeHomeExams">Take-Home Exams:</label>
-  <input type="checkbox" id="takeHomeExams" />
+  <label for="takeHomeExamsCheckbox">Take-Home Exams:</label>
+  <input type="checkbox" id="takeHomeExamsCheckbox" />
 
-  <div id="takeHomeExamsContainer" style="display: none;">
-    <label for="examTimeLimit">Exam Time Limit (in Minutes):</label>
-    <input type="number" id="examTimeLimit" value="60" min="0" />
+  <div id="takeHomeExamsContainer" class="hidden">
+    <label for="examTimeLimitInput">Exam Time Limit (in Minutes):</label>
+    <input type="number" id="examTimeLimitInput" value="60" min="0" />
   </div>
-</div>
-  `
+`;
     column3.appendChild(examsPanel)
 
     // Panel: Other Assignments
@@ -338,12 +364,27 @@ class WorkloadEstimator extends HTMLElement {
     const otherAssignmentsPanel = document.createElement('div')
     otherAssignmentsPanel.className = 'panel'
     otherAssignmentsPanel.innerHTML = `
- <label for="numberPerSemester"># Per Semester: </label>
- <input type="number" id="numberPerSemester" value="0" min="0" />
- <label for="hours per assignment">Hours Per Assignment: </label>
-  <input type="range" id="hoursPerAssignment" value="0" min="0" max="50" />
-    <input type="checkbox" id="independent"> Independent</input>
-   `
+  <label for="numberPerSemesterInput"># Per Semester:</label>
+  <input type="number" id="numberPerSemesterInput" value="0" min="0" />
+
+  <label for="hoursPerAssignmentInput">Hours Per Assignment:</label>
+  <input type="range" id="hoursPerAssignmentInput" value="0" min="0" max="50" step="1" list="steplist" />
+  <datalist id="steplist">
+    <option value="0" label="0"></option>
+    <option value="5" label="5"></option>
+    <option value="10" label="10"></option>
+    <option value="15" label="15"></option>
+    <option value="20" label="20"></option>
+    <option value="25" label="25"></option>
+    <option value="30" label="30"></option>
+    <option value="35" label="35"></option>
+    <option value="40" label="40"></option>
+    <option value="45" label="45"></option>
+    <option value="50" label="50"></option>
+  </datalist>
+
+  <input type="checkbox" id="independentCheckbox"> Independent </input>
+`;
     column4.appendChild(otherAssignmentsPanel)
 
     // Panel: Class Meetings
@@ -380,109 +421,143 @@ class WorkloadEstimator extends HTMLElement {
     shadow.appendChild(container)
 
     // Store references for later
-    this._classWeeks = shadow.querySelector('#classWeeks')
-    this._readingPages = shadow.querySelector('#weeklyPages')
-    this._pageDensity = shadow.querySelector('#pageDensity')
-    this._difficulty = shadow.querySelector('#difficulty')
-    this._purpose = shadow.querySelector('#purpose')
-    this._semesterPages = shadow.querySelector('#semesterPages')
-    this._pageDensityWriting = shadow.querySelector('#pageDensityWriting')
-    this._genre = shadow.querySelector('#genre')
-    this._drafting = shadow.querySelector('#drafting')
-    this._hoursPerPage = shadow.querySelector('#hoursPerPage')
-    this._weeklyVideos = shadow.querySelector('#weeklyVideos')
-    this._discussionPosts = shadow.querySelector('#discussionPosts')
-    this._discussionFormat = shadow.querySelector('#discussionFormat')
-    this._avgLength = shadow.querySelector('#avgLength')
-    this._exams = shadow.querySelector('#exams')
-    this._studyHours = shadow.querySelector('#studyHours')
-    this._takeHomeExams = shadow.querySelector('#takeHomeExams')
-    this._examTimeLimit = shadow.querySelector('#examTimeLimit')
-    this._numberPerSemester = shadow.querySelector('#numberPerSemester')
-    this._hoursPerAssignment = shadow.querySelector('#hoursPerAssignment')
-    this._independent = shadow.querySelector('#independent')
-    this._meetingsPerWeek = shadow.querySelector('#meetingsPerWeek')
-    this._meetingLength = shadow.querySelector('#meetingLength')
+    this._classWeeks = shadow.querySelector('#classWeeks');
+    this._readingPages = shadow.querySelector('#weeklyPagesInput');
+    this._pageDensity = shadow.querySelector('#pageDensitySelect');
+    this._difficulty = shadow.querySelector('#difficultySelect');
+    this._purpose = shadow.querySelector('#purposeSelect');
+    this._semesterPages = shadow.querySelector('#semesterPagesInput');
+    this._pageDensityWriting = shadow.querySelector('#pageDensityWritingSelect');
+    this._genre = shadow.querySelector('#genreSelect');
+    this._drafting = shadow.querySelector('#draftingSelect');
+    this._hoursPerPage = shadow.querySelector('#hoursPerPageInput');
+    this._weeklyVideos = shadow.querySelector('#weeklyVideosInput');
+    this._discussionPosts = shadow.querySelector('#discussionPostsInput');
+    this._discussionFormat = shadow.querySelector('#discussionFormatSelect');
+    this._avgLength = shadow.querySelector('#avgLengthInput');
+    this._avgLengthMinutes = shadow.querySelector('#avgLengthMinutesInput');
+    this._exams = shadow.querySelector('#examsInput');
+    this._studyHours = shadow.querySelector('#studyHoursInput');
+    this._takeHomeExams = shadow.querySelector('#takeHomeExamsCheckbox');
+    this._examTimeLimit = shadow.querySelector('#examTimeLimitInput');
+    this._numberPerSemester = shadow.querySelector('#numberPerSemesterInput');
+    this._hoursPerAssignment = shadow.querySelector('#hoursPerAssignmentInput');
+    this._independent = shadow.querySelector('#independentCheckbox');
+    this._meetingsPerWeek = shadow.querySelector('#meetingsPerWeek');
+    this._meetingLength = shadow.querySelector('#meetingLength');
 
     // Add event listeners to update calculations
-    this._classWeeks.addEventListener('input', this.calculateWorkload.bind(this))
-    this._readingPages.addEventListener('input', this.calculateWorkload.bind(this))
-    this._pageDensity.addEventListener('input', this.calculateWorkload.bind(this))
-    this._difficulty.addEventListener('input', this.calculateWorkload.bind(this))
-    this._purpose.addEventListener('input', this.calculateWorkload.bind(this))
-    this._semesterPages.addEventListener('input', this.calculateWorkload.bind(this))
-    this._pageDensityWriting.addEventListener('input', this.calculateWorkload.bind(this))
-    this._genre.addEventListener('input', this.calculateWorkload.bind(this))
-    this._drafting.addEventListener('input', this.calculateWorkload.bind(this))
-    this._hoursPerPage.addEventListener('input', this.calculateWorkload.bind(this))
-    this._weeklyVideos.addEventListener('input', this.calculateWorkload.bind(this))
-    this._discussionPosts.addEventListener('input', this.calculateWorkload.bind(this))
-    this._discussionFormat.addEventListener('input', this.calculateWorkload.bind(this))
-    this._avgLength.addEventListener('input', this.calculateWorkload.bind(this))
-    this._exams.addEventListener('input', this.calculateWorkload.bind(this))
-    this._studyHours.addEventListener('input', this.calculateWorkload.bind(this))
-    this._takeHomeExams.addEventListener('input', this.calculateWorkload.bind(this))
-    this._examTimeLimit.addEventListener('input', this.calculateWorkload.bind(this))
-    this._numberPerSemester.addEventListener('input', this.calculateWorkload.bind(this))
-    this._hoursPerAssignment.addEventListener('input', this.calculateWorkload.bind(this))
-    this._independent.addEventListener('input', this.calculateWorkload.bind(this))
-    this._meetingsPerWeek.addEventListener('input', this.calculateWorkload.bind(this))
-    this._meetingLength.addEventListener('input', this.calculateWorkload.bind(this))
-    this.shadowRoot.querySelector('#independent').addEventListener('change', this.calculateWorkload.bind(this));
+    this._classWeeks.addEventListener('input', this.calculateWorkload.bind(this));
+    this._readingPages.addEventListener('input', this.calculateWorkload.bind(this));
+    this._pageDensity.addEventListener('input', this.calculateWorkload.bind(this));
+    this._difficulty.addEventListener('input', this.calculateWorkload.bind(this));
+    this._purpose.addEventListener('input', this.calculateWorkload.bind(this));
+    this._semesterPages.addEventListener('input', this.calculateWorkload.bind(this));
+    this._pageDensityWriting.addEventListener('input', this.calculateWorkload.bind(this));
+    this._genre.addEventListener('input', this.calculateWorkload.bind(this));
+    this._drafting.addEventListener('input', this.calculateWorkload.bind(this));
+    this._hoursPerPage.addEventListener('input', this.calculateWorkload.bind(this));
+    this._weeklyVideos.addEventListener('input', this.calculateWorkload.bind(this));
+    this._discussionPosts.addEventListener('input', this.calculateWorkload.bind(this));
+    this._discussionFormat.addEventListener('input', this.calculateWorkload.bind(this));
+    this._avgLength.addEventListener('input', this.calculateWorkload.bind(this));
+    this._avgLengthMinutes.addEventListener('input', this.calculateWorkload.bind(this));
+    this._exams.addEventListener('input', this.calculateWorkload.bind(this));
+    this._studyHours.addEventListener('input', this.calculateWorkload.bind(this));
+    this._takeHomeExams.addEventListener('input', this.calculateWorkload.bind(this));
+    this._examTimeLimit.addEventListener('input', this.calculateWorkload.bind(this));
+    this._numberPerSemester.addEventListener('input', this.calculateWorkload.bind(this));
+    this._hoursPerAssignment.addEventListener('input', this.calculateWorkload.bind(this));
+    this._independent.addEventListener('input', this.calculateWorkload.bind(this));
+    this._meetingsPerWeek.addEventListener('input', this.calculateWorkload.bind(this));
+    this._meetingLength.addEventListener('input', this.calculateWorkload.bind(this));
+
+    this.shadowRoot.querySelector('#independentCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
+    this.shadowRoot.querySelector('#takeHomeExamsCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
+    this.shadowRoot.querySelector('#readingRateCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
+    this.shadowRoot.querySelector('#writingRateCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
+    this.shadowRoot.querySelector('#discussionRateCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
+    this.shadowRoot.querySelector('#discussionFormatSelect').addEventListener('change', this.toggleDiscussionInput.bind(this));
   }
 
-  connectedCallback () {
+  connectedCallback() {
     // Run the initial calculation on component load
     this.calculateWorkload();
 
-    // Add event listeners for checkboxes
-    this.shadowRoot.querySelector('#readingRate').addEventListener('change', (e) => {
-      const container = this.shadowRoot.querySelector('#readingRateContainer');
-      container.style.display = e.target.checked ? 'block' : 'none';
+    // Add event listener for format selection
+    const formatSelect = this.shadowRoot.querySelector('#discussionFormatSelect');
+    const textInputContainer = this.shadowRoot.querySelector('#textInputContainer');
+    const audioInputContainer = this.shadowRoot.querySelector('#audioInputContainer');
+
+    formatSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'Text') {
+        textInputContainer.classList.remove('hidden');
+        audioInputContainer.classList.add('hidden');
+      } else {
+        textInputContainer.classList.add('hidden');
+        audioInputContainer.classList.remove('hidden');
+      }
       this.calculateWorkload();
     });
 
-    this.shadowRoot.querySelector('#writingRate').addEventListener('change', (e) => {
-      const container = this.shadowRoot.querySelector('#writingRateContainer');
-      container.style.display = e.target.checked ? 'block' : 'none';
-      this.calculateWorkload();
-    });
+    // Define elements and events for checkboxes
+    const elementsToBind = [
+      { element: this.shadowRoot.querySelector('#readingRateCheckbox'), container: this.shadowRoot.querySelector('#readingRateContainer') },
+      { element: this.shadowRoot.querySelector('#writingRateCheckbox'), container: this.shadowRoot.querySelector('#writingRateContainer') },
+      { element: this.shadowRoot.querySelector('#discussionRateCheckbox'), container: this.shadowRoot.querySelector('#discussionRateContainer') },
+      { element: this.shadowRoot.querySelector('#takeHomeExamsCheckbox'), container: this.shadowRoot.querySelector('#takeHomeExamsContainer') },
+    ];
 
-    this.shadowRoot.querySelector('#discussionRate').addEventListener('change', (e) => {
-      const container = this.shadowRoot.querySelector('#discussionRateContainer');
-      container.style.display = e.target.checked ? 'block' : 'none';
-      this.calculateWorkload();
+    // Attach event listeners for checkboxes
+    elementsToBind.forEach(({ element, container }) => {
+      element.addEventListener('change', (e) => {
+        container.classList.toggle('hidden', !e.target.checked);
+        this.calculateWorkload();
+      });
     });
+  }
 
-    this.shadowRoot.querySelector('#takeHomeExams').addEventListener('change', (e) => {
-      const container = this.shadowRoot.querySelector('#takeHomeExamsContainer');
-      container.style.display = e.target.checked ? 'block' : 'none';
-      this.calculateWorkload();
-    });
+  toggleDiscussionInput() {
+    const format = this.shadowRoot.querySelector('#discussionFormatSelect').value;
+    const textInputContainer = this.shadowRoot.querySelector('#textInputContainer');
+    const audioInputContainer = this.shadowRoot.querySelector('#audioInputContainer');
+
+    if (format === 'Text') {
+      textInputContainer.classList.remove('hidden');
+      audioInputContainer.classList.add('hidden');
+    } else {
+      textInputContainer.classList.add('hidden');
+      audioInputContainer.classList.remove('hidden');
+    }
   }
 
   calculateWorkload() {
     const classWeeks = parseInt(this._classWeeks.value || '1', 10);
+
     // Reading workload calculation
     const pagesPerWeek = parseInt(this._readingPages.value || '0', 10);
     let readingRate;
-    if (!this.shadowRoot.querySelector('#readingRate').checked) {
+    if (!this.shadowRoot.querySelector('#readingRateCheckbox').checked) {
       readingRate = pagesPerHour[this._difficulty.value][this._purpose.value][this._pageDensity.value];
       this.readingRate = readingRate;
     } else {
-      readingRate = parseInt(this.shadowRoot.querySelector('#pagesPerHour').value || '0', 10);
+      readingRate = parseInt(this.shadowRoot.querySelector('#pagesPerHourInput').value || '0', 10);
       this.readingRate = readingRate;
     }
-    const readingTime = (pagesPerWeek / (readingRate || 1)); // Avoid division by zero
+    const readingTime = pagesPerWeek / (readingRate || 1); // Avoid division by zero
 
     // Writing workload calculation
-    const paperCount = parseInt(this._semesterPages.value || '0', 10);
+    const paperCount = parseInt(this.shadowRoot.querySelector('#semesterPagesInput').value || '0', 10);
     let writingRate;
-    if (!this.shadowRoot.querySelector('#writingRate').checked) {
-      writingRate = hoursPerWriting[this._pageDensityWriting.value][this._drafting.value][this._genre.value];
+    if (!this.shadowRoot.querySelector('#writingRateCheckbox').checked) {
+      writingRate = hoursPerWriting[
+        this._pageDensityWriting.value
+      ][this._drafting.value][
+        this._genre.value
+      ];
       this.writingRate = writingRate;
     } else {
-      writingRate = parseFloat(this.shadowRoot.querySelector('#hoursPerPage').value || '0');
+      writingRate = parseFloat(this._hoursPerPage.value || '0');
       this.writingRate = writingRate;
     }
     const writingTime = (paperCount * (writingRate || 0)) / classWeeks; // Avoid NaN if writingRate is undefined
@@ -490,26 +565,30 @@ class WorkloadEstimator extends HTMLElement {
     // Videos workload calculation
     const videoTime = parseInt(this._weeklyVideos.value || '0', 10);
     
-
     // Discussion workload calculation
     const postsPerWeek = parseInt(this._discussionPosts.value || '0', 10);
-    const postLength = parseInt(this._avgLength.value || '0', 10);
+    const discussionFormat = this._discussionFormat.value;
+
     let discussionRate;
-    if (!this.shadowRoot.querySelector('#discussionRate').checked) {
-      const discussionFormat = this._discussionFormat.value;
-      discussionRate = discussionFormat === 'Text' ? postLength * 0.05 : postLength * 0.1;
-      this.hoursPerWeekDiscussion = discussionRate;
+    if (!this.shadowRoot.querySelector('#discussionRateCheckbox').checked) {
+      if (discussionFormat === 'Text') {
+        const postLength = parseInt(this._avgLength.value || '0', 10);
+        discussionRate = (postLength * 0.004); 
+      } else if (discussionFormat === 'Audio/Video') {
+        const postLengthMinutes = parseInt(this._avgLengthMinutes.value || '0', 10);
+        discussionRate = postLengthMinutes / 3; 
+      }
     } else {
-      discussionRate = parseFloat(this.shadowRoot.querySelector('#hoursPerWeek').value || '0');
-      this.hoursPerWeekDiscussion = discussionRate;
+      discussionRate = parseFloat(this.shadowRoot.querySelector('#hoursPerWeekInput').value || '0');
     }
-    const discussionTime = (postsPerWeek * (discussionRate || 0)) / classWeeks; // Avoid NaN if discussionRate is undefined
+    const discussionTime = postsPerWeek * (discussionRate || 0);
+    this.hoursPerWeekDiscussion = discussionTime; // Avoid NaN if discussionRate is undefined
 
     // Exams workload calculation
     const exams = parseInt(this._exams.value || '0', 10);
     const studyHours = parseFloat(this._studyHours.value || '0', 10);
     let examTimeLimit = 0;
-    if (this.shadowRoot.querySelector('#takeHomeExams').checked) {
+    if (this.shadowRoot.querySelector('#takeHomeExamsCheckbox').checked) {
       examTimeLimit = parseFloat(this._examTimeLimit.value || '0') / 60; // Convert minutes to hours
     }
     const examsTime = (exams * (studyHours + examTimeLimit)) / classWeeks;
@@ -519,10 +598,15 @@ class WorkloadEstimator extends HTMLElement {
     const numberPerSemester = parseInt(this._numberPerSemester.value || '0', 10);
     const otherTime = (otherAssignments * numberPerSemester) / classWeeks;
 
+    // Class meetings workload calculation
+    const meetingsPerWeek = parseInt(this._meetingsPerWeek.value || '0', 10);
+    const meetingLength = parseFloat(this._meetingLength.value || '0', 10);
+    const classMeetingTime = meetingsPerWeek * meetingLength;
+
     // Independent and Contact workload calculation
     let independent = readingTime + writingTime + videoTime + examsTime;
-    let contact = discussionTime;
-    if (!this.shadowRoot.querySelector('#independent').checked) {
+    let contact = discussionTime + classMeetingTime;
+    if (this._independent.checked) {
       independent += otherTime;
     } else {
       contact += otherTime;
@@ -532,13 +616,17 @@ class WorkloadEstimator extends HTMLElement {
     const total = independent + contact;
 
     // Update the workload estimates in the UI
-    this.updateWorkloadEstimates(total, independent, contact);
+    this.updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, this.hoursPerWeekDiscussion);
   }
 
-  updateWorkloadEstimates (total, independent, contact) {
-    this.shadowRoot.querySelector('#total').innerHTML = `Total: ${total.toFixed(1)} hours/week`
-    this.shadowRoot.querySelector('#independent').innerHTML = `Independent: ${independent.toFixed(1)} hours/week`
-    this.shadowRoot.querySelector('#contact').innerHTML = `Contact: ${contact.toFixed(1)} hours/week`
+  updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, hoursPerWeekDiscussion) {
+    // Update workload estimates
+    this.shadowRoot.querySelector('#total').innerHTML = `Total: ${total.toFixed(1)} hours/week`;
+    this.shadowRoot.querySelector('#independent').innerHTML = `Independent: ${independent.toFixed(1)} hours/week`;
+    this.shadowRoot.querySelector('#contact').innerHTML = `Contact: ${contact.toFixed(1)} hours/week`;
+    this.shadowRoot.querySelector('#readingRateDisplay').innerHTML = `${readingRate.toFixed(0)} pages per hour`;
+    this.shadowRoot.querySelector('#writingRateDisplay').innerHTML = `${writingRate.toFixed(2)} hours per page`;
+    this.shadowRoot.querySelector('#hoursPerWeekDiscussionDisplay').innerHTML = `${hoursPerWeekDiscussion.toFixed(2)} hours / week`;
   }
 }
 
