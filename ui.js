@@ -1,32 +1,32 @@
 // Function to initialize the workload estimator
 const pagesPerHour = {
   "No New Concepts": {
-    Survey: { "450 Words": 67, "600 Words": 47, "750 Words": 33 },
-    Understand: { "450 Words": 50, "600 Words": 35, "750 Words": 25 },
-    Engage: { "450 Words": 40, "600 Words": 28, "750 Words": 20 }
+    Survey: { "450 Words": 67, "600 Words": 50, "750 Words": 40 },
+    Understand: { "450 Words": 33, "600 Words": 25, "750 Words": 20 },
+    Engage: { "450 Words": 17, "600 Words": 13, "750 Words": 10 }
   },
   "Some New Concepts": {
-    Survey: { "450 Words": 33, "600 Words": 24, "750 Words": 17 },
-    Understand: { "450 Words": 25, "600 Words": 18, "750 Words": 13 },
-    Engage: { "450 Words": 20, "600 Words": 14, "750 Words": 10 }
+    Survey: { "450 Words": 47, "600 Words": 35, "750 Words": 28 },
+    Understand: { "450 Words": 24, "600 Words": 18, "750 Words": 14 },
+    Engage: { "450 Words": 12, "600 Words": 9, "750 Words": 7 }
   },
   "Many New Concepts": {
-    Survey: { "450 Words": 17, "600 Words": 12, "750 Words": 9 },
-    Understand: { "450 Words": 13, "600 Words": 9, "750 Words": 7 },
-    Engage: { "450 Words": 10, "600 Words": 7, "750 Words": 5 }
+    Survey: { "450 Words": 33, "600 Words": 25, "750 Words": 20 },
+    Understand: { "450 Words": 17, "600 Words": 13, "750 Words": 10 },
+    Engage: { "450 Words": 9, "600 Words": 7, "750 Words": 5 }
   }
 };
 
 const hoursPerWriting = {
   "250 Words": {
-    "No Drafting": { "Reflection/Narrative": 0.75, Argument: 1, Research: 1.25 },
-    "Minimal Drafting": { "Reflection/Narrative": 1.5, Argument: 2, Research: 2.5 },
-    "Extensive Drafting": { "Reflection/Narrative": 2, Argument: 3, Research: 4 }
+    "No Drafting": { "Reflection/Narrative": 0.75, Argument: 1.5, Research: 3 },
+    "Minimal Drafting": { "Reflection/Narrative": 1, Argument: 2, Research: 4 },
+    "Extensive Drafting": { "Reflection/Narrative": 1.25, Argument: 2.5, Research: 5 }
   },
   "500 Words": {
-    "No Drafting": { "Reflection/Narrative": 1.5, Argument: 2, Research: 2.5 },
-    "Minimal Drafting": { "Reflection/Narrative": 3, Argument: 4, Research: 5 },
-    "Extensive Drafting": { "Reflection/Narrative": 4, Argument: 6, Research: 8 }
+    "No Drafting": { "Reflection/Narrative": 1.5, Argument: 3, Research: 6 },
+    "Minimal Drafting": { "Reflection/Narrative": 2, Argument: 4, Research: 8 },
+    "Extensive Drafting": { "Reflection/Narrative": 2.5, Argument: 5, Research: 10 }
   }
 };
 
@@ -304,7 +304,7 @@ class WorkloadEstimator extends HTMLElement {
 
   <div id="audioInputContainer" class="hidden">
     <label for="avgLengthMinutesInput">Avg. Length (Minutes):</label>
-    <input type="number" id="avgLengthMinutesInput" value="5" min="0" />
+    <input type="number" id="avgLengthMinutesInput" value="3" min="0" />
   </div>
 
   <label for="hoursPerWeekDiscussionDisplay">Estimated Hours:</label>
@@ -585,7 +585,7 @@ class WorkloadEstimator extends HTMLElement {
     // Other assignments workload calculation
     const otherAssignments = parseInt(this._hoursPerAssignment.value || '0', 10);
     const numberPerSemester = parseInt(this._numberPerSemester.value || '0', 10);
-    const otherTime = (otherAssignments * numberPerSemester) / classWeeks;
+    const otherTime = ((otherAssignments * numberPerSemester) / classWeeks);
 
     // Class meetings workload calculation
     const meetingsPerWeek = parseInt(this._meetingsPerWeek.value || '0', 10);
