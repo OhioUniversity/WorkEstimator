@@ -104,15 +104,6 @@ class WorkloadEstimator extends HTMLElement {
         margin: 0.5rem 0;
       }
 
-      datalist {
-        display: flex;
-        justify-content: space-between;
-      }
-
-      datalist option {
-        text-align: center;
-      }
-
       input[type="checkbox"] {
         margin-right: 0.5rem;
       }
@@ -368,20 +359,10 @@ class WorkloadEstimator extends HTMLElement {
   <input type="number" id="numberPerSemesterInput" value="0" min="0" />
 
   <label for="hoursPerAssignmentInput">Hours Per Assignment:</label>
-  <input type="range" id="hoursPerAssignmentInput" value="0" min="0" max="50" step="1" list="steplist" />
-  <datalist id="steplist">
-    <option value="0" label="0"></option>
-    <option value="5" label="5"></option>
-    <option value="10" label="10"></option>
-    <option value="15" label="15"></option>
-    <option value="20" label="20"></option>
-    <option value="25" label="25"></option>
-    <option value="30" label="30"></option>
-    <option value="35" label="35"></option>
-    <option value="40" label="40"></option>
-    <option value="45" label="45"></option>
-    <option value="50" label="50"></option>
-  </datalist>
+  <div style="display: flex; align-items: center; gap: 10px;">
+  <input type="range" id="hoursPerAssignmentInput" value="0" min="0" max="50" step="1" />
+  <span id="sliderValue">0</span>
+</div>
 
   <input type="checkbox" id="independentCheckbox"> Independent </input>
 `;
@@ -478,6 +459,14 @@ class WorkloadEstimator extends HTMLElement {
     this.shadowRoot.querySelector('#writingRateCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
     this.shadowRoot.querySelector('#discussionRateCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
     this.shadowRoot.querySelector('#discussionFormatSelect').addEventListener('change', this.toggleDiscussionInput.bind(this));
+
+    const slider = this.shadowRoot.querySelector('#hoursPerAssignmentInput');
+    const sliderValue = this.shadowRoot.querySelector('#sliderValue');
+
+    // Update the slider value dynamically
+    slider.addEventListener('input', () => {
+      sliderValue.textContent = slider.value;
+    });
   }
 
   connectedCallback() {
