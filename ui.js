@@ -1,4 +1,10 @@
-// Function to initialize the workload estimator
+/// @fileoverview This is a custom element that estimates the workload for a course based on user inputs. It calculates the total hours per week required for various activities such as reading, writing, watching videos, participating in discussions, studying for exams, and attending class meetings.
+/// @author Kylie Roenigk
+
+
+/// These are the different rates for reading and writing based on the type of assignment and the difficulty level
+/// this data is based on the following sources:
+/// https://cat.wfu.edu/resources/workload/estimationdetails/
 const pagesPerHour = {
   "No New Concepts": {
     Survey: { "450 Words": 67, "600 Words": 50, "750 Words": 40 },
@@ -30,6 +36,7 @@ const hoursPerWriting = {
   }
 };
 
+
 class WorkloadEstimator extends HTMLElement {
   constructor () {
     super()
@@ -44,7 +51,8 @@ class WorkloadEstimator extends HTMLElement {
     // Attach a shadow DOM for encapsulation
     const shadow = this.attachShadow({ mode: 'open' })
 
-    // Create the main container
+    // Create a style element to hold the CSS
+    /// This is the style for the custom element
     const style = document.createElement('style')
     style.textContent = `
       :host {
@@ -133,6 +141,7 @@ class WorkloadEstimator extends HTMLElement {
     shadow.appendChild(container)
 
     /// Create heading: This is the heading for the main container
+    /// This will hold the title and the authors as well as the link to the website
     const heading = document.createElement('h3')
     heading.textContent = 'Enhanced Course Workload Estimator'
     container.appendChild(heading)
@@ -146,6 +155,10 @@ class WorkloadEstimator extends HTMLElement {
     container.appendChild(grid)
 
     // Create columns: This will create the four columns in the grid
+    /// Column 1: Course Info and Reading Assignments
+    /// Column 2: Writing Assignments and Videos/Podcasts
+    /// Column 3: Discussion Posts and Exams
+    /// Column 4: Other Assignments, Class Meetings, and Workload Estimates
     const column1 = document.createElement('div')
     column1.className = 'column'
     const column2 = document.createElement('div')
@@ -160,6 +173,8 @@ class WorkloadEstimator extends HTMLElement {
     grid.appendChild(column4)
 
     // Panel: Course Info
+    /// This panel will hold the inputs for the course info
+    /// This will include the class duration in weeks
     const courseInfoHeading = document.createElement('h4')
     courseInfoHeading.textContent = 'Course Info'
     column1.appendChild(courseInfoHeading)
@@ -173,6 +188,9 @@ class WorkloadEstimator extends HTMLElement {
     column1.appendChild(courseInfoPanel)
 
     // Panel: Reading Assignments
+    /// This panel will hold the inputs for the reading assignments
+    /// This will include the pages per week, page density, difficulty, and purpose
+    /// This will also include the estimated reading rate and the option to manually adjust it
     const readingAssignmentHeading = document.createElement('h4')
     readingAssignmentHeading.textContent = 'Reading Assignments'
     column1.appendChild(readingAssignmentHeading)
@@ -221,6 +239,9 @@ class WorkloadEstimator extends HTMLElement {
     column1.appendChild(readingAssignmentsPanel)
 
     // Panel: Writing Assignments
+    /// This panel will hold the inputs for the writing assignments
+    /// This will include the pages per semester, page density, genre, drafting, and estimated writing rate
+    /// This will also include the option to manually adjust the writing rate
     const writingAssignmentHeading = document.createElement('h4')
     writingAssignmentHeading.textContent = 'Writing Assignments'
     column2.appendChild(writingAssignmentHeading)
@@ -268,6 +289,8 @@ class WorkloadEstimator extends HTMLElement {
     column2.appendChild(writingAssignmentsPanel)
 
     // Panel: Videos/Podcasts
+    /// This panel will hold the inputs for the videos/podcasts
+    /// This will include the hours per week
     const videosPanelHeading = document.createElement('h4')
     videosPanelHeading.textContent = 'Videos/Podcasts'
     column2.appendChild(videosPanelHeading)
@@ -281,6 +304,9 @@ class WorkloadEstimator extends HTMLElement {
     column2.appendChild(videosPanel)
 
     // Panel: Discussion Posts
+    /// This panel will hold the inputs for the discussion posts
+    /// This will include the posts per week, format, avg length, and estimated discussion rate
+    /// This will also include the option to manually adjust the time needed for discussion posts per week
     const discussionPostsHeading = document.createElement('h4')
     discussionPostsHeading.textContent = 'Discussion Posts'
     column3.appendChild(discussionPostsHeading)
@@ -324,6 +350,9 @@ class WorkloadEstimator extends HTMLElement {
     column3.appendChild(discussionPostsPanel)
 
     // Panel: Exams
+    /// This panel will hold the inputs for the exams
+    /// This will include the exams per semester and study hours per exam.
+    /// This will also include the option to set the time limit for take-home exams if the checkbox is checked
     const examsHeading = document.createElement('h4')
     examsHeading.textContent = 'Exams'
     column3.appendChild(examsHeading)
@@ -348,6 +377,9 @@ class WorkloadEstimator extends HTMLElement {
     column3.appendChild(examsPanel)
 
     // Panel: Other Assignments
+    /// This panel will hold the inputs for the other assignments
+    /// This will include the number of assignments per semester and the hours per assignment
+    /// This will also include the option to mark the assignments as independent
     const otherAssignmentsHeading = document.createElement('h4')
     otherAssignmentsHeading.textContent = 'Other Assignments'
     column4.appendChild(otherAssignmentsHeading)
@@ -369,6 +401,8 @@ class WorkloadEstimator extends HTMLElement {
     column4.appendChild(otherAssignmentsPanel)
 
     // Panel: Class Meetings
+    /// This panel will hold the inputs for the class meetings
+    /// This will include the meetings per week and the meeting length
     const classMeetingsHeading = document.createElement('h4')
     classMeetingsHeading.textContent = 'Class Meetings'
     column4.appendChild(classMeetingsHeading)
@@ -384,6 +418,8 @@ class WorkloadEstimator extends HTMLElement {
     column4.appendChild(classMeetingsPanel)
 
     /// Panel : Workload Estimates
+    /// This panel will hold the estimates for the workload
+    /// This will include the total hours per week, independent hours per week, and contact hours per week
     const workloadEstimatesHeading = document.createElement('h4')
     workloadEstimatesHeading.textContent = 'Workload Estimates'
     column4.appendChild(workloadEstimatesHeading)
@@ -401,7 +437,7 @@ class WorkloadEstimator extends HTMLElement {
     shadow.appendChild(style)
     shadow.appendChild(container)
 
-    // Store references for later
+    // These are the elements that we will use to calculate the workload
     this._classWeeks = shadow.querySelector('#classWeeks');
     this._readingPages = shadow.querySelector('#weeklyPagesInput');
     this._pageDensity = shadow.querySelector('#pageDensitySelect');
@@ -427,7 +463,7 @@ class WorkloadEstimator extends HTMLElement {
     this._meetingsPerWeek = shadow.querySelector('#meetingsPerWeek');
     this._meetingLength = shadow.querySelector('#meetingLength');
 
-    // Add event listeners to update calculations
+    // Add event listeners to update calculations on input changes
     this._classWeeks.addEventListener('input', this.calculateWorkload.bind(this));
     this._readingPages.addEventListener('input', this.calculateWorkload.bind(this));
     this._pageDensity.addEventListener('input', this.calculateWorkload.bind(this));
@@ -453,6 +489,7 @@ class WorkloadEstimator extends HTMLElement {
     this._meetingsPerWeek.addEventListener('input', this.calculateWorkload.bind(this));
     this._meetingLength.addEventListener('input', this.calculateWorkload.bind(this));
 
+    /// Add event listeners for checkboxes
     this.shadowRoot.querySelector('#independentCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
     this.shadowRoot.querySelector('#takeHomeExamsCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
     this.shadowRoot.querySelector('#readingRateCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
@@ -460,6 +497,7 @@ class WorkloadEstimator extends HTMLElement {
     this.shadowRoot.querySelector('#discussionRateCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
     this.shadowRoot.querySelector('#discussionFormatSelect').addEventListener('change', this.toggleDiscussionInput.bind(this));
 
+    // Add event listener for the slider to update the value display
     const slider = this.shadowRoot.querySelector('#hoursPerAssignmentInput');
     const sliderValue = this.shadowRoot.querySelector('#sliderValue');
 
@@ -473,11 +511,12 @@ class WorkloadEstimator extends HTMLElement {
     // Run the initial calculation on component load
     this.calculateWorkload();
 
-    // Add event listener for format selection
+    // Add event listener for format selection for discussion posts
     const formatSelect = this.shadowRoot.querySelector('#discussionFormatSelect');
     const textInputContainer = this.shadowRoot.querySelector('#textInputContainer');
     const audioInputContainer = this.shadowRoot.querySelector('#audioInputContainer');
 
+    /// This will toggle the input fields for the discussion posts based on the format selected
     formatSelect.addEventListener('change', (e) => {
       if (e.target.value === 'Text') {
         textInputContainer.classList.remove('hidden');
@@ -497,7 +536,7 @@ class WorkloadEstimator extends HTMLElement {
       { element: this.shadowRoot.querySelector('#takeHomeExamsCheckbox'), container: this.shadowRoot.querySelector('#takeHomeExamsContainer') },
     ];
 
-    // Attach event listeners for checkboxes
+    // Attach event listeners for checkboxes, once the checkbox is checked, the container will be shown
     elementsToBind.forEach(({ element, container }) => {
       element.addEventListener('change', (e) => {
         container.classList.toggle('hidden', !e.target.checked);
@@ -506,6 +545,9 @@ class WorkloadEstimator extends HTMLElement {
     });
   }
 
+  /// This function will toggle the input fields for the discussion posts based on the format selected
+  /// If the format is text, the avg length input will be shown
+  /// If the format is audio/video, the avg length minutes input will be shown
   toggleDiscussionInput() {
     const format = this.shadowRoot.querySelector('#discussionFormatSelect').value;
     const textInputContainer = this.shadowRoot.querySelector('#textInputContainer');
@@ -520,10 +562,16 @@ class WorkloadEstimator extends HTMLElement {
     }
   }
 
+  /// This function will calculate the workload based on the inputs
+  /// It will calculate the total hours per week, independent hours per week, and contact hours per week
+  /// It will also calculate all estimates and rates based on the inputs
+  /// It will update the workload estimates and all rates in the UI
   calculateWorkload() {
     const classWeeks = parseInt(this._classWeeks.value || '1', 10);
 
-    // Reading workload calculation
+    /// Reading workload calculation
+    /// This will calculate the reading workload based on the inputs and match the reading rate to a value in the pagesPerHour object
+    /// This will also calculate the reading time based on the pages per week and the reading rate
     const pagesPerWeek = parseInt(this._readingPages.value || '0', 10);
     let readingRate;
     if (!this.shadowRoot.querySelector('#readingRateCheckbox').checked) {
@@ -535,7 +583,9 @@ class WorkloadEstimator extends HTMLElement {
     }
     const readingTime = pagesPerWeek / (readingRate || 1); // Avoid division by zero
 
-    // Writing workload calculation
+    /// Writing workload calculation
+    /// This will calculate the writing workload based on the inputs and match the writing rate to a value in the hoursPerWriting object
+    /// This will also calculate the writing time based on the pages per semester and the writing rate
     const paperCount = parseInt(this.shadowRoot.querySelector('#semesterPagesInput').value || '0', 10);
     let writingRate;
     if (!this.shadowRoot.querySelector('#writingRateCheckbox').checked) {
@@ -549,12 +599,18 @@ class WorkloadEstimator extends HTMLElement {
       writingRate = parseFloat(this._hoursPerPage.value || '0');
       this.writingRate = writingRate;
     }
-    const writingTime = (paperCount * (writingRate || 0)) / classWeeks; // Avoid NaN if writingRate is undefined
+    const writingTime = (paperCount * (writingRate || 0)) / classWeeks;
 
-    // Videos workload calculation
+    /// Videos workload calculation
+    /// This will calculate the video workload based on the inputs
     const videoTime = parseInt(this._weeklyVideos.value || '0', 10);
     
-    // Discussion workload calculation
+    /// Discussion workload calculation
+    /// This will calculate the discussion workload per week based on the inputs and will also calculate the discussion rate based on the format
+    /// If the format is text, the avg length input will be used to calculate the discussion rate
+    /// If the format is audio/video, the avg length minutes input will be used to calculate the discussion rate
+    /// If the discussion rate checkbox is checked, the hours per week input will be used to calculate the discussion rate
+    /// The discussion time will be calculated based on the posts per week and the discussion rate
     const postsPerWeek = parseInt(this._discussionPosts.value || '0', 10);
     const discussionFormat = this._discussionFormat.value;
 
@@ -571,28 +627,36 @@ class WorkloadEstimator extends HTMLElement {
       discussionRate = parseFloat(this.shadowRoot.querySelector('#hoursPerWeekInput').value || '0');
     }
     const discussionTime = postsPerWeek * (discussionRate || 0);
-    this.hoursPerWeekDiscussion = discussionTime; // Avoid NaN if discussionRate is undefined
+    this.hoursPerWeekDiscussion = discussionTime; 
 
-    // Exams workload calculation
+    /// Exams workload calculation
+    /// This will calculate the exam workload per week based on the inputs of the exams per semester and the study hours per exam
+    /// If the take home exams checkbox is checked, the exam time limit will be added to the study hours
+    /// The exam time will be calculated based on the exams per semester, the study hours per exam, exam time limit, and the class weeks
     const exams = parseInt(this._exams.value || '0', 10);
     const studyHours = parseFloat(this._studyHours.value || '0', 10);
     let examTimeLimit = 0;
     if (this.shadowRoot.querySelector('#takeHomeExamsCheckbox').checked) {
-      examTimeLimit = parseFloat(this._examTimeLimit.value || '0') / 60; // Convert minutes to hours
+      examTimeLimit = parseFloat(this._examTimeLimit.value || '0') / 60; /// Convert minutes to hours
     }
     const examsTime = (exams * (studyHours + examTimeLimit)) / classWeeks;
 
-    // Other assignments workload calculation
+    /// Other assignments workload calculation
+    /// This will calculate the other assignments workload per week based on the inputs of the number of assignments per semester and the hours per assignment
+    /// The other time will be calculated based on the number of assignments per semester, hours per assignment, and class weeks
     const otherAssignments = parseInt(this._hoursPerAssignment.value || '0', 10);
     const numberPerSemester = parseInt(this._numberPerSemester.value || '0', 10);
     const otherTime = ((otherAssignments * numberPerSemester) / classWeeks);
 
-    // Class meetings workload calculation
+    /// Class meetings workload calculation
+    /// This will calculate the class meetings workload per week based on the inputs of the meetings per week and the meeting length
+    /// The class meeting time will be calculated based on the meetings per week and the meeting length
     const meetingsPerWeek = parseInt(this._meetingsPerWeek.value || '0', 10);
     const meetingLength = parseFloat(this._meetingLength.value || '0', 10);
     const classMeetingTime = meetingsPerWeek * meetingLength;
 
     // Independent and Contact workload calculation
+
     let independent = readingTime + writingTime + videoTime + examsTime;
     let contact = discussionTime + classMeetingTime;
     if (this._independent.checked) {
@@ -608,11 +672,11 @@ class WorkloadEstimator extends HTMLElement {
     this.updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, this.hoursPerWeekDiscussion);
   }
 
+  /// This function will update the workload estimates and rates in the UI
   updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, hoursPerWeekDiscussion) {
-    // Update workload estimates
-    this.shadowRoot.querySelector('#total').innerHTML = `Total: ${total.toFixed(1)} hours/week`;
-    this.shadowRoot.querySelector('#independent').innerHTML = `Independent: ${independent.toFixed(1)} hours/week`;
-    this.shadowRoot.querySelector('#contact').innerHTML = `Contact: ${contact.toFixed(1)} hours/week`;
+    this.shadowRoot.querySelector('#total').innerHTML = `Total: ${total.toFixed(2)} hours/week`;
+    this.shadowRoot.querySelector('#independent').innerHTML = `Independent: ${independent.toFixed(2)} hours/week`;
+    this.shadowRoot.querySelector('#contact').innerHTML = `Contact: ${contact.toFixed(2)} hours/week`;
     this.shadowRoot.querySelector('#readingRateDisplay').innerHTML = `${readingRate.toFixed(0)} pages per hour`;
     this.shadowRoot.querySelector('#writingRateDisplay').innerHTML = `${writingRate.toFixed(2)} hours per page`;
     this.shadowRoot.querySelector('#hoursPerWeekDiscussionDisplay').innerHTML = `${hoursPerWeekDiscussion.toFixed(2)} hours / week`;
