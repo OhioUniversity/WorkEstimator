@@ -1,4 +1,12 @@
-/// @fileoverview This is a custom element that estimates the workload for a course based on user inputs. It calculates the total hours per week required for various activities such as reading, writing, watching videos, participating in discussions, studying for exams, and attending class meetings.
+/// @fileoverview Custom Web Component for estimating course workload.
+/// Calculates the total weekly hours required for various academic activities, including:
+/// - Reading
+/// - Writing
+/// - Watching videos
+/// - Participating in discussions
+/// - Studying for exams
+/// - Attending class meetings
+/// Provides real-time feedback and allows manual adjustments for customizable rates.
 /// @author Kylie Roenigk
 
 
@@ -40,6 +48,7 @@ const hoursPerWriting = {
 class WorkloadEstimator extends HTMLElement {
   constructor () {
     super()
+
     // Initialize default values
     this.total = 0
     this.independent = 0
@@ -135,10 +144,9 @@ class WorkloadEstimator extends HTMLElement {
     `
 
     /// Create main container: This will hold all the elements
-    shadow.appendChild(style)
     const container = document.createElement('div')
     container.className = 'container'
-    shadow.appendChild(container)
+    shadow.appendChild(style, container)
 
     /// Create heading: This is the heading for the main container
     /// This will hold the title and the authors as well as the link to the website
@@ -172,7 +180,7 @@ class WorkloadEstimator extends HTMLElement {
     grid.appendChild(column3)
     grid.appendChild(column4)
 
-    // Panel: Course Info
+    /// Panel: Course Info
     /// This panel will hold the inputs for the course info
     /// This will include the class duration in weeks
     const courseInfoHeading = document.createElement('h4')
@@ -182,12 +190,12 @@ class WorkloadEstimator extends HTMLElement {
     const courseInfoPanel = document.createElement('div')
     courseInfoPanel.className = 'panel'
     courseInfoPanel.innerHTML = `
-  <label for="Class Duration (Weeks)">Class Duration (Weeks):</label>
-  <input type="number" id="classWeeks" value="15" min="0" />
-  `
+      <label for="Class Duration (Weeks)">Class Duration (Weeks):</label>
+      <input type="number" id="classWeeks" value="15" min="0" />
+    `
     column1.appendChild(courseInfoPanel)
 
-    // Panel: Reading Assignments
+    /// Panel: Reading Assignments
     /// This panel will hold the inputs for the reading assignments
     /// This will include the pages per week, page density, difficulty, and purpose
     /// This will also include the estimated reading rate and the option to manually adjust it
@@ -198,47 +206,47 @@ class WorkloadEstimator extends HTMLElement {
     const readingAssignmentsPanel = document.createElement('div')
     readingAssignmentsPanel.className = 'panel'
     readingAssignmentsPanel.innerHTML = `
-  <label for="weeklyPagesInput">Pages per Week:</label>
-  <input type="number" id="weeklyPagesInput" value="0" min="0" />
+      <label for="weeklyPagesInput">Pages per Week:</label>
+      <input type="number" id="weeklyPagesInput" value="0" min="0" />
 
-  <label>Page Density:</label>
-  <select id="pageDensitySelect">
-    <option value="450 Words">450 Words</option>
-    <option value="600 Words">600 Words</option>
-    <option value="750 Words">750 Words</option>
-  </select>
+      <label>Page Density:</label>
+      <select id="pageDensitySelect">
+        <option value="450 Words">450 Words</option>
+        <option value="600 Words">600 Words</option>
+        <option value="750 Words">750 Words</option>
+      </select>
 
-  <label>Difficulty:</label>
-  <select id="difficultySelect">
-    <option value="No New Concepts">No New Concepts</option>
-    <option value="Some New Concepts">Some New Concepts</option>
-    <option value="Many New Concepts">Many New Concepts</option>
-  </select>
+      <label>Difficulty:</label>
+      <select id="difficultySelect">
+        <option value="No New Concepts">No New Concepts</option>
+        <option value="Some New Concepts">Some New Concepts</option>
+        <option value="Many New Concepts">Many New Concepts</option>
+      </select>
 
-  <label>Purpose:</label>
-  <select id="purposeSelect">
-    <option value="Survey">Survey</option>
-    <option value="Understand">Understand</option>
-    <option value="Engage">Engage</option>
-  </select>
+      <label>Purpose:</label>
+      <select id="purposeSelect">
+        <option value="Survey">Survey</option>
+        <option value="Understand">Understand</option>
+        <option value="Engage">Engage</option>
+      </select>
 
-  <label for="readingRateDisplay">Estimated Reading Rate:</label>
-  <div id="readingRateDisplay">
-    <p>${this.readingRate} pages per hour</p>
-  </div>
+      <label for="readingRateDisplay">Estimated Reading Rate:</label>
+      <div id="readingRateDisplay">
+        <p>${this.readingRate} pages per hour</p>
+      </div>
 
-  <div id="readingRatePanel">
-    <label for="readingRateCheckbox">Manually Adjust Reading Rate:</label>
-    <input type="checkbox" id="readingRateCheckbox" />
-    <div id="readingRateContainer" class="hidden"">
-      <label for="pagesPerHourInput">Pages Read Per Hour:</label>
-      <input type="number" id="pagesPerHourInput" value="10" min="0" />
+      <div id="readingRatePanel">
+        <label for="readingRateCheckbox">Manually Adjust Reading Rate:</label>
+        <input type="checkbox" id="readingRateCheckbox" />
+      <div id="readingRateContainer" class="hidden">
+        <label for="pagesPerHourInput">Pages Read Per Hour:</label>
+        <input type="number" id="pagesPerHourInput" value="10" min="0" />
+      </div>
     </div>
-  </div>
-`;
+  `;
     column1.appendChild(readingAssignmentsPanel)
 
-    // Panel: Writing Assignments
+    /// Panel: Writing Assignments
     /// This panel will hold the inputs for the writing assignments
     /// This will include the pages per semester, page density, genre, drafting, and estimated writing rate
     /// This will also include the option to manually adjust the writing rate
@@ -249,43 +257,43 @@ class WorkloadEstimator extends HTMLElement {
     const writingAssignmentsPanel = document.createElement('div')
     writingAssignmentsPanel.className = 'panel'
     writingAssignmentsPanel.innerHTML = `
-  <label for="semesterPagesInput">Pages per Semester:</label>
-  <input type="number" id="semesterPagesInput" value="0" min="0" />
+      <label for="semesterPagesInput">Pages per Semester:</label>
+      <input type="number" id="semesterPagesInput" value="0" min="0" />
 
-  <label>Page Density:</label>
-  <select id="pageDensityWritingSelect">
-    <option value="250 Words">250 Words</option>
-    <option value="500 Words">500 Words</option>
-  </select>
+      <label>Page Density:</label>
+      <select id="pageDensityWritingSelect">
+        <option value="250 Words">250 Words</option>
+        <option value="500 Words">500 Words</option>
+      </select>
 
-  <label>Genre:</label>
-  <select id="genreSelect">
-    <option value="Reflection/Narrative">Reflection/Narrative</option>
-    <option value="Argument">Argument</option>
-    <option value="Research">Research</option>
-  </select>
+      <label>Genre:</label>
+      <select id="genreSelect">
+        <option value="Reflection/Narrative">Reflection/Narrative</option>
+        <option value="Argument">Argument</option>
+        <option value="Research">Research</option>
+      </select>
 
-  <label>Drafting:</label>
-  <select id="draftingSelect">
-    <option value="No Drafting">No Drafting</option>
-    <option value="Minimal Drafting">Minimal Drafting</option>
-    <option value="Extensive Drafting">Extensive Drafting</option>
-  </select>
+      <label>Drafting:</label>
+      <select id="draftingSelect">
+        <option value="No Drafting">No Drafting</option>
+        <option value="Minimal Drafting">Minimal Drafting</option>
+        <option value="Extensive Drafting">Extensive Drafting</option>
+      </select>
 
-  <label for="writingRateDisplay">Estimated Writing Rate:</label>
-  <div id="writingRateDisplay">
-    <p>${this.writingRate} hours per page</p>
-  </div>
+      <label for="writingRateDisplay">Estimated Writing Rate:</label>
+      <div id="writingRateDisplay">
+        <p>${this.writingRate} hours per page</p>
+      </div>
 
-  <div id="writingRatePanel">
-    <label for="writingRateCheckbox">Manually Adjust Writing Rate:</label>
-    <input type="checkbox" id="writingRateCheckbox" />
-    <div id="writingRateContainer" class="hidden"">
-      <label for="hoursPerPageInput">Hours Per Written Page:</label>
-      <input type="number" id="hoursPerPageInput" value="0.5" min="0" />
-    </div>
-  </div>
-`;
+      <div id="writingRatePanel">
+        <label for="writingRateCheckbox">Manually Adjust Writing Rate:</label>
+        <input type="checkbox" id="writingRateCheckbox" />
+        <div id="writingRateContainer" class="hidden">
+          <label for="hoursPerPageInput">Hours Per Written Page:</label>
+          <input type="number" id="hoursPerPageInput" value="0.5" min="0" />
+        </div>
+      </div>
+    `;
     column2.appendChild(writingAssignmentsPanel)
 
     // Panel: Videos/Podcasts
@@ -298,8 +306,8 @@ class WorkloadEstimator extends HTMLElement {
     const videosPanel = document.createElement('div')
     videosPanel.className = 'panel'
     videosPanel.innerHTML = ` 
-  <label for="Hours per Week">Hours per Week:</label>
-  <input type="number" id="weeklyVideosInput" value="0" min="0" />
+      <label for="Hours per Week">Hours per Week:</label>
+      <input type="number" id="weeklyVideosInput" value="0" min="0" />
   `
     column2.appendChild(videosPanel)
 
@@ -314,39 +322,39 @@ class WorkloadEstimator extends HTMLElement {
     const discussionPostsPanel = document.createElement('div')
     discussionPostsPanel.className = 'panel'
     discussionPostsPanel.innerHTML = `
-  <label for="discussionPostsInput">Posts per Week:</label>
-  <input type="number" id="discussionPostsInput" value="0" min="0" />
+      <label for="discussionPostsInput">Posts per Week:</label>
+      <input type="number" id="discussionPostsInput" value="0" min="0" />
 
-  <label>Format:</label>
-  <select id="discussionFormatSelect">
-    <option value="Text">Text</option>
-    <option value="Audio/Video">Audio/Video</option>
-  </select>
+      <label>Format:</label>
+      <select id="discussionFormatSelect">
+        <option value="Text">Text</option>
+        <option value="Audio/Video">Audio/Video</option>
+      </select>
 
-  <div id="textInputContainer">
-    <label for="avgLengthInput">Avg. Length (Words):</label>
-    <input type="number" id="avgLengthInput" value="250" min="0" />
-  </div>
+      <div id="textInputContainer">
+        <label for="avgLengthInput">Avg. Length (Words):</label>
+        <input type="number" id="avgLengthInput" value="250" min="0" />
+      </div>
 
-  <div id="audioInputContainer" class="hidden">
-    <label for="avgLengthMinutesInput">Avg. Length (Minutes):</label>
-    <input type="number" id="avgLengthMinutesInput" value="3" min="0" />
-  </div>
+      <div id="audioInputContainer" class="hidden">
+        <label for="avgLengthMinutesInput">Avg. Length (Minutes):</label>
+        <input type="number" id="avgLengthMinutesInput" value="3" min="0" />
+      </div>
 
-  <label for="hoursPerWeekDiscussionDisplay">Estimated Hours:</label>
-  <div id="hoursPerWeekDiscussionDisplay">
-    <p>${this.hoursPerWeekDiscussion} hours/week</p>
-  </div>
+      <label for="hoursPerWeekDiscussionDisplay">Estimated Hours:</label>
+      <div id="hoursPerWeekDiscussionDisplay">
+        <p>${this.hoursPerWeekDiscussion} hours/week</p>
+      </div>
 
-  <div id="discussionRatePanel">
-    <label for="discussionRateCheckbox">Manually Adjust Discussion Rate:</label>
-    <input type="checkbox" id="discussionRateCheckbox" />
-    <div id="discussionRateContainer" class="hidden">
-      <label for="hoursPerWeekInput">Hours Per Week:</label>
-      <input type="number" id="hoursPerWeekInput" value="1" min="0" />
+      <div id="discussionRatePanel">
+        <label for="discussionRateCheckbox">Manually Adjust Discussion Rate:</label>
+        <input type="checkbox" id="discussionRateCheckbox" />
+        <div id="discussionRateContainer" class="hidden">
+          <label for="hoursPerWeekInput">Hours Per Week:</label>
+          <input type="number" id="hoursPerWeekInput" value="1" min="0" />
+        </div>
     </div>
-  </div>
-`;
+  `;
     column3.appendChild(discussionPostsPanel)
 
     // Panel: Exams
@@ -360,20 +368,20 @@ class WorkloadEstimator extends HTMLElement {
     const examsPanel = document.createElement('div')
     examsPanel.className = 'panel'
     examsPanel.innerHTML = `
-  <label for="examsInput">Exams per Semester:</label>
-  <input type="number" id="examsInput" value="0" min="0" />
+      <label for="examsInput">Exams per Semester:</label>
+      <input type="number" id="examsInput" value="0" min="0" />
 
-  <label for="studyHoursInput">Study Hours per Exam:</label>
-  <input type="number" id="studyHoursInput" value="5" min="0" />
+      <label for="studyHoursInput">Study Hours per Exam:</label>
+      <input type="number" id="studyHoursInput" value="5" min="0" />
 
-  <label for="takeHomeExamsCheckbox">Take-Home Exams:</label>
-  <input type="checkbox" id="takeHomeExamsCheckbox" />
+      <label for="takeHomeExamsCheckbox">Take-Home Exams:</label>
+      <input type="checkbox" id="takeHomeExamsCheckbox" />
 
-  <div id="takeHomeExamsContainer" class="hidden">
-    <label for="examTimeLimitInput">Exam Time Limit (in Minutes):</label>
-    <input type="number" id="examTimeLimitInput" value="60" min="0" />
-  </div>
-`;
+      <div id="takeHomeExamsContainer" class="hidden">
+        <label for="examTimeLimitInput">Exam Time Limit (in Minutes):</label>
+        <input type="number" id="examTimeLimitInput" value="60" min="0" />
+      </div>
+    `;
     column3.appendChild(examsPanel)
 
     // Panel: Other Assignments
@@ -387,17 +395,17 @@ class WorkloadEstimator extends HTMLElement {
     const otherAssignmentsPanel = document.createElement('div')
     otherAssignmentsPanel.className = 'panel'
     otherAssignmentsPanel.innerHTML = `
-  <label for="numberPerSemesterInput"># Per Semester:</label>
-  <input type="number" id="numberPerSemesterInput" value="0" min="0" />
+      <label for="numberPerSemesterInput"># Per Semester:</label>
+      <input type="number" id="numberPerSemesterInput" value="0" min="0" />
 
-  <label for="hoursPerAssignmentInput">Hours Per Assignment:</label>
-  <div style="display: flex; align-items: center; gap: 10px;">
-  <input type="range" id="hoursPerAssignmentInput" value="0" min="0" max="50" step="1" />
-  <span id="sliderValue">0</span>
-</div>
+      <label for="hoursPerAssignmentInput">Hours Per Assignment:</label>
+      <div style="display: flex; align-items: center; gap: 10px;">
+      <input type="range" id="hoursPerAssignmentInput" value="0" min="0" max="50" step="1" />
+      <span id="sliderValue">0</span>
+      </div>
 
-  <input type="checkbox" id="independentCheckbox"> Independent </input>
-`;
+      <input type="checkbox" id="independentCheckbox"> Independent </input>
+    `;
     column4.appendChild(otherAssignmentsPanel)
 
     // Panel: Class Meetings
@@ -443,6 +451,7 @@ class WorkloadEstimator extends HTMLElement {
     this._pageDensity = shadow.querySelector('#pageDensitySelect');
     this._difficulty = shadow.querySelector('#difficultySelect');
     this._purpose = shadow.querySelector('#purposeSelect');
+    this._pagesPerHour = shadow.querySelector('#pagesPerHourInput');
     this._semesterPages = shadow.querySelector('#semesterPagesInput');
     this._pageDensityWriting = shadow.querySelector('#pageDensityWritingSelect');
     this._genre = shadow.querySelector('#genreSelect');
@@ -453,6 +462,7 @@ class WorkloadEstimator extends HTMLElement {
     this._discussionFormat = shadow.querySelector('#discussionFormatSelect');
     this._avgLength = shadow.querySelector('#avgLengthInput');
     this._avgLengthMinutes = shadow.querySelector('#avgLengthMinutesInput');
+    this._discussionHoursPerWeek = shadow.querySelector('#hoursPerWeekInput');
     this._exams = shadow.querySelector('#examsInput');
     this._studyHours = shadow.querySelector('#studyHoursInput');
     this._takeHomeExams = shadow.querySelector('#takeHomeExamsCheckbox');
@@ -464,30 +474,34 @@ class WorkloadEstimator extends HTMLElement {
     this._meetingLength = shadow.querySelector('#meetingLength');
 
     // Add event listeners to update calculations on input changes
-    this._classWeeks.addEventListener('input', this.calculateWorkload.bind(this));
-    this._readingPages.addEventListener('input', this.calculateWorkload.bind(this));
-    this._pageDensity.addEventListener('input', this.calculateWorkload.bind(this));
-    this._difficulty.addEventListener('input', this.calculateWorkload.bind(this));
-    this._purpose.addEventListener('input', this.calculateWorkload.bind(this));
-    this._semesterPages.addEventListener('input', this.calculateWorkload.bind(this));
-    this._pageDensityWriting.addEventListener('input', this.calculateWorkload.bind(this));
-    this._genre.addEventListener('input', this.calculateWorkload.bind(this));
-    this._drafting.addEventListener('input', this.calculateWorkload.bind(this));
-    this._hoursPerPage.addEventListener('input', this.calculateWorkload.bind(this));
-    this._weeklyVideos.addEventListener('input', this.calculateWorkload.bind(this));
-    this._discussionPosts.addEventListener('input', this.calculateWorkload.bind(this));
-    this._discussionFormat.addEventListener('input', this.calculateWorkload.bind(this));
-    this._avgLength.addEventListener('input', this.calculateWorkload.bind(this));
-    this._avgLengthMinutes.addEventListener('input', this.calculateWorkload.bind(this));
-    this._exams.addEventListener('input', this.calculateWorkload.bind(this));
-    this._studyHours.addEventListener('input', this.calculateWorkload.bind(this));
-    this._takeHomeExams.addEventListener('input', this.calculateWorkload.bind(this));
-    this._examTimeLimit.addEventListener('input', this.calculateWorkload.bind(this));
-    this._numberPerSemester.addEventListener('input', this.calculateWorkload.bind(this));
-    this._hoursPerAssignment.addEventListener('input', this.calculateWorkload.bind(this));
-    this._independent.addEventListener('input', this.calculateWorkload.bind(this));
-    this._meetingsPerWeek.addEventListener('input', this.calculateWorkload.bind(this));
-    this._meetingLength.addEventListener('input', this.calculateWorkload.bind(this));
+    const inputs = [
+      this._classWeeks,
+      this._readingPages,
+      this._pageDensity,
+      this._difficulty,
+      this._purpose,
+      this._semesterPages,
+      this._pageDensityWriting,
+      this._genre,
+      this._drafting,
+      this._hoursPerPage,
+      this._weeklyVideos,
+      this._discussionPosts,
+      this._discussionFormat,
+      this._avgLength,
+      this._avgLengthMinutes,
+      this._exams,
+      this._studyHours,
+      this._takeHomeExams,
+      this._examTimeLimit,
+      this._numberPerSemester,
+      this._hoursPerAssignment,
+      this._independent,
+      this._meetingsPerWeek,
+      this._meetingLength,
+    ];
+
+    inputs.forEach(input => input.addEventListener('input', this.calculateWorkload.bind(this)));
 
     /// Add event listeners for checkboxes
     this.shadowRoot.querySelector('#independentCheckbox').addEventListener('change', this.calculateWorkload.bind(this));
@@ -516,7 +530,9 @@ class WorkloadEstimator extends HTMLElement {
     const textInputContainer = this.shadowRoot.querySelector('#textInputContainer');
     const audioInputContainer = this.shadowRoot.querySelector('#audioInputContainer');
 
-    /// This will toggle the input fields for the discussion posts based on the format selected
+    /// Toggles the visibility of input fields for discussion posts based on the selected format.
+    /// - Shows the average length (words) input for text format.
+    /// - Shows the average length (minutes) input for audio/video format.
     formatSelect.addEventListener('change', (e) => {
       if (e.target.value === 'Text') {
         textInputContainer.classList.remove('hidden');
@@ -549,7 +565,7 @@ class WorkloadEstimator extends HTMLElement {
   /// If the format is text, the avg length input will be shown
   /// If the format is audio/video, the avg length minutes input will be shown
   toggleDiscussionInput() {
-    const format = this.shadowRoot.querySelector('#discussionFormatSelect').value;
+    const format = this._discussionFormat.value;
     const textInputContainer = this.shadowRoot.querySelector('#textInputContainer');
     const audioInputContainer = this.shadowRoot.querySelector('#audioInputContainer');
 
@@ -562,10 +578,9 @@ class WorkloadEstimator extends HTMLElement {
     }
   }
 
-  /// This function will calculate the workload based on the inputs
-  /// It will calculate the total hours per week, independent hours per week, and contact hours per week
-  /// It will also calculate all estimates and rates based on the inputs
-  /// It will update the workload estimates and all rates in the UI
+  /// Calculates the total weekly workload based on user inputs.
+  /// - Computes independent and contact hours for activities like reading, writing, discussions, exams, and class meetings.
+  /// - Updates the workload estimates and rates dynamically in the UI.
   calculateWorkload() {
     const classWeeks = parseInt(this._classWeeks.value || '1', 10);
 
@@ -578,7 +593,7 @@ class WorkloadEstimator extends HTMLElement {
       readingRate = pagesPerHour[this._difficulty.value][this._purpose.value][this._pageDensity.value];
       this.readingRate = readingRate;
     } else {
-      readingRate = parseInt(this.shadowRoot.querySelector('#pagesPerHourInput').value || '0', 10);
+      readingRate = parseInt(this._pagesPerHour.value || '0', 10);
       this.readingRate = readingRate;
     }
     const readingTime = pagesPerWeek / (readingRate || 1); // Avoid division by zero
@@ -586,14 +601,11 @@ class WorkloadEstimator extends HTMLElement {
     /// Writing workload calculation
     /// This will calculate the writing workload based on the inputs and match the writing rate to a value in the hoursPerWriting object
     /// This will also calculate the writing time based on the pages per semester and the writing rate
-    const paperCount = parseInt(this.shadowRoot.querySelector('#semesterPagesInput').value || '0', 10);
+    const paperCount = parseInt(this._semesterPages.value || '0', 10);
     let writingRate;
     if (!this.shadowRoot.querySelector('#writingRateCheckbox').checked) {
       writingRate = hoursPerWriting[
-        this._pageDensityWriting.value
-      ][this._drafting.value][
-        this._genre.value
-      ];
+        this._pageDensityWriting.value][this._drafting.value][this._genre.value];
       this.writingRate = writingRate;
     } else {
       writingRate = parseFloat(this._hoursPerPage.value || '0');
@@ -606,11 +618,11 @@ class WorkloadEstimator extends HTMLElement {
     const videoTime = parseInt(this._weeklyVideos.value || '0', 10);
     
     /// Discussion workload calculation
-    /// This will calculate the discussion workload per week based on the inputs and will also calculate the discussion rate based on the format
-    /// If the format is text, the avg length input will be used to calculate the discussion rate
-    /// If the format is audio/video, the avg length minutes input will be used to calculate the discussion rate
-    /// If the discussion rate checkbox is checked, the hours per week input will be used to calculate the discussion rate
-    /// The discussion time will be calculated based on the posts per week and the discussion rate
+    /// Calculates the weekly discussion workload based on user inputs.
+    /// - For text format: Uses the average length (words) to determine the discussion rate.
+    /// - For audio/video format: Uses the average length (minutes) to determine the discussion rate.
+    /// - If manual adjustment is enabled, uses the user-provided hours per week.
+    /// The total discussion time is calculated as: posts per week * discussion rate.
     const postsPerWeek = parseInt(this._discussionPosts.value || '0', 10);
     const discussionFormat = this._discussionFormat.value;
 
@@ -624,15 +636,15 @@ class WorkloadEstimator extends HTMLElement {
         discussionRate = postLengthMinutes / 3; 
       }
     } else {
-      discussionRate = parseFloat(this.shadowRoot.querySelector('#hoursPerWeekInput').value || '0');
+      discussionRate = parseFloat(this._discussionHoursPerWeek.value || '0');
     }
     const discussionTime = postsPerWeek * (discussionRate || 0);
     this.hoursPerWeekDiscussion = discussionTime; 
 
     /// Exams workload calculation
-    /// This will calculate the exam workload per week based on the inputs of the exams per semester and the study hours per exam
-    /// If the take home exams checkbox is checked, the exam time limit will be added to the study hours
-    /// The exam time will be calculated based on the exams per semester, the study hours per exam, exam time limit, and the class weeks
+    /// Calculates the weekly exam workload based on the number of exams, study hours per exam, and optional take-home exam time.
+    /// - Adds the exam time limit (if applicable) to the study hours.
+    /// - Distributes the total exam workload evenly across the class weeks.
     const exams = parseInt(this._exams.value || '0', 10);
     const studyHours = parseFloat(this._studyHours.value || '0', 10);
     let examTimeLimit = 0;
@@ -669,7 +681,7 @@ class WorkloadEstimator extends HTMLElement {
     const total = independent + contact;
 
     // Update the workload estimates in the UI
-    this.updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, this.hoursPerWeekDiscussion);
+    this.updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, discussionTime);
   }
 
   /// This function will update the workload estimates and rates in the UI
