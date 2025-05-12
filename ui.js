@@ -144,18 +144,18 @@ connectedCallback() {
   /// - Computes independent and contact hours for activities like reading, writing, discussions, exams, and class meetings.
   /// - Updates the workload estimates and rates dynamically in the UI.
   calculateWorkload() {
-    const classWeeks = parseInt(this._classWeeks.value || '1', 10);
+    const classWeeks = parseInt(this.elements.classWeeks.value || '1', 10);
 
     /// Reading workload calculation
     /// This will calculate the reading workload based on the inputs and match the reading rate to a value in the pagesPerHour object
     /// This will also calculate the reading time based on the pages per week and the reading rate
-    const pagesPerWeek = parseInt(this._readingPages.value || '0', 10);
+    const pagesPerWeek = parseInt(this.elements.readingPages.value || '0', 10);
     let readingRate;
     if (!this.shadowRoot.querySelector('#readingRateCheckbox').checked) {
-      readingRate = pagesPerHour[this._difficulty.value][this._purpose.value][this._pageDensity.value];
+      readingRate = pagesPerHour[this.elements.difficulty.value][this.elements.purpose.value][this.elements.pageDensity.value];
       this.readingRate = readingRate;
     } else {
-      readingRate = parseInt(this._pagesPerHour.value || '0', 10);
+      readingRate = parseInt(this.elements.pagesPerHour.value || '0', 10);
       this.readingRate = readingRate;
     }
     const readingTime = pagesPerWeek / (readingRate || 1); // Avoid division by zero
@@ -163,21 +163,21 @@ connectedCallback() {
     /// Writing workload calculation
     /// This will calculate the writing workload based on the inputs and match the writing rate to a value in the hoursPerWriting object
     /// This will also calculate the writing time based on the pages per semester and the writing rate
-    const paperCount = parseInt(this._semesterPages.value || '0', 10);
+    const paperCount = parseInt(this.elements.semesterPages.value || '0', 10);
     let writingRate;
     if (!this.shadowRoot.querySelector('#writingRateCheckbox').checked) {
       writingRate = hoursPerWriting[
-        this._pageDensityWriting.value][this._drafting.value][this._genre.value];
+        this.elements.pageDensityWriting.value][this.elements.drafting.value][this.elements.genre.value];
       this.writingRate = writingRate;
     } else {
-      writingRate = parseFloat(this._hoursPerPage.value || '0');
+      writingRate = parseFloat(this.elements.hoursPerPage.value || '0');
       this.writingRate = writingRate;
     }
     const writingTime = (paperCount * (writingRate || 0)) / classWeeks;
 
     /// Videos workload calculation
     /// This will calculate the video workload based on the inputs
-    const videoTime = parseInt(this._weeklyVideos.value || '0', 10);
+    const videoTime = parseInt(this.elements.weeklyVideos.value || '0', 10);
     
     /// Discussion workload calculation
     /// Calculates the weekly discussion workload based on user inputs.
@@ -185,20 +185,20 @@ connectedCallback() {
     /// - For audio/video format: Uses the average length (minutes) to determine the discussion rate.
     /// - If manual adjustment is enabled, uses the user-provided hours per week.
     /// The total discussion time is calculated as: posts per week * discussion rate.
-    const postsPerWeek = parseInt(this._discussionPosts.value || '0', 10);
-    const discussionFormat = this._discussionFormat.value;
+    const postsPerWeek = parseInt(this.elements.discussionPosts.value || '0', 10);
+    const discussionFormat = this.elements.discussionFormat.value;
 
     let discussionRate;
     if (!this.shadowRoot.querySelector('#discussionRateCheckbox').checked) {
       if (discussionFormat === 'Text') {
-        const postLength = parseInt(this._avgLength.value || '0', 10);
+        const postLength = parseInt(this.elements.avgLength.value || '0', 10);
         discussionRate = (postLength * 0.004); 
       } else if (discussionFormat === 'Audio/Video') {
-        const postLengthMinutes = parseInt(this._avgLengthMinutes.value || '0', 10);
+        const postLengthMinutes = parseInt(this.elements.avgLengthMinutes.value || '0', 10);
         discussionRate = postLengthMinutes / 3; 
       }
     } else {
-      discussionRate = parseFloat(this._discussionHoursPerWeek.value || '0');
+      discussionRate = parseFloat(this.elements.discussionHoursPerWeek.value || '0');
     }
     const discussionTime = postsPerWeek * (discussionRate || 0);
     this.hoursPerWeekDiscussion = discussionTime; 
@@ -207,33 +207,33 @@ connectedCallback() {
     /// Calculates the weekly exam workload based on the number of exams, study hours per exam, and optional take-home exam time.
     /// - Adds the exam time limit (if applicable) to the study hours.
     /// - Distributes the total exam workload evenly across the class weeks.
-    const exams = parseInt(this._exams.value || '0', 10);
-    const studyHours = parseFloat(this._studyHours.value || '0', 10);
+    const exams = parseInt(this.elements.exams.value || '0', 10);
+    const studyHours = parseFloat(this.elements.studyHours.value || '0', 10);
     const examTimeLimit = 0;
     if (this.shadowRoot.querySelector('#takeHomeExamsCheckbox').checked) {
-      examTimeLimit = parseFloat(this._examTimeLimit.value || '0') / 60; /// Convert minutes to hours
+      examTimeLimit = parseFloat(this.elements.examTimeLimit.value || '0') / 60; /// Convert minutes to hours
     }
     const examsTime = (exams * (studyHours + examTimeLimit)) / classWeeks;
 
     /// Other assignments workload calculation
     /// This will calculate the other assignments workload per week based on the inputs of the number of assignments per semester and the hours per assignment
     /// The other time will be calculated based on the number of assignments per semester, hours per assignment, and class weeks
-    const otherAssignments = parseInt(this._hoursPerAssignment.value || '0', 10);
-    const numberPerSemester = parseInt(this._numberPerSemester.value || '0', 10);
+    const otherAssignments = parseInt(this.elements.hoursPerAssignment.value || '0', 10);
+    const numberPerSemester = parseInt(this.elements.numberPerSemester.value || '0', 10);
     const otherTime = ((otherAssignments * numberPerSemester) / classWeeks);
 
     /// Class meetings workload calculation
     /// This will calculate the class meetings workload per week based on the inputs of the meetings per week and the meeting length
     /// The class meeting time will be calculated based on the meetings per week and the meeting length
-    const meetingsPerWeek = parseInt(this._meetingsPerWeek.value || '0', 10);
-    const meetingLength = parseFloat(this._meetingLength.value || '0', 10);
+    const meetingsPerWeek = parseInt(this.elements.meetingsPerWeek.value || '0', 10);
+    const meetingLength = parseFloat(this.elements.meetingLength.value || '0', 10);
     const classMeetingTime = meetingsPerWeek * meetingLength;
 
     // Independent and Contact workload calculation
 
     let independent = readingTime + writingTime + videoTime + examsTime;
     let contact = discussionTime + classMeetingTime;
-    if (this._independent.checked) {
+    if (this.elements.independent.checked) {
       independent += otherTime;
     } else {
       contact += otherTime;
@@ -248,21 +248,21 @@ connectedCallback() {
 
   /// This function will update the workload estimates and rates in the UI
   updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, hoursPerWeekDiscussion) {
-    this.shadowRoot.querySelector('#total').innerHTML = `Total: ${total.toFixed(2)} hours/week`;
-    this.shadowRoot.querySelector('#independent').innerHTML = `Independent: ${independent.toFixed(2)} hours/week`;
-    this.shadowRoot.querySelector('#contact').innerHTML = `Contact: ${contact.toFixed(2)} hours/week`;
-    this.shadowRoot.querySelector('#readingRateDisplay').innerHTML = `${readingRate.toFixed(0)} pages per hour`;
-    this.shadowRoot.querySelector('#writingRateDisplay').innerHTML = `${writingRate.toFixed(2)} hours per page`;
-    this.shadowRoot.querySelector('#hoursPerWeekDiscussionDisplay').innerHTML = `${hoursPerWeekDiscussion.toFixed(2)} hours/week`;
+    this.shadowRoot.querySelector('#total').textContent = `Total: ${total.toFixed(2)} hours/week`;
+    this.shadowRoot.querySelector('#independent').textContent = `Independent: ${independent.toFixed(2)} hours/week`;
+    this.shadowRoot.querySelector('#contact').textContent = `Contact: ${contact.toFixed(2)} hours/week`;
+    this.shadowRoot.querySelector('#readingRateDisplay').textContent = `${readingRate.toFixed(0)} pages per hour`;
+    this.shadowRoot.querySelector('#writingRateDisplay').textContent = `${writingRate.toFixed(2)} hours per page`;
+    this.shadowRoot.querySelector('#hoursPerWeekDiscussionDisplay').textContent = `${hoursPerWeekDiscussion.toFixed(2)} hours/week`;
   }
 
   updatePlaceholders() {
-    this.elements.readingRateDisplay.innerHTML = `${this.readingRate} pages per hour`;
-    this.elements.writingRateDisplay.innerHTML = `${this.writingRate} hours per page`;
-    this.elements.hoursPerWeekDiscussionDisplay.innerHTML = `${this.hoursPerWeekDiscussion} hours/week`;
-    this.elements.total.innerHTML = `Total: ${this.total} hours/week`;
-    this.elements.independentDisplay.innerHTML = `Independent: ${this.independent} hours/week`;
-    this.elements.contact.innerHTML = `Contact: ${this.contact} hours/week`;
+    this.elements.readingRateDisplay.textContent = `${this.readingRate} pages per hour`;
+    this.elements.writingRateDisplay.textContent = `${this.writingRate} hours per page`;
+    this.elements.hoursPerWeekDiscussionDisplay.textContent = `${this.hoursPerWeekDiscussion} hours/week`;
+    this.elements.total.textContent = `Total: ${this.total} hours/week`;
+    this.elements.independentDisplay.textContent = `Independent: ${this.independent} hours/week`;
+    this.elements.contact.textContent = `Contact: ${this.contact} hours/week`;
   }
 
   initializeElements() {
@@ -324,6 +324,7 @@ connectedCallback() {
       this.elements.pageDensity,
       this.elements.difficulty,
       this.elements.purpose,
+      this.elements.pagesPerHour,
       this.elements.semesterPages,
       this.elements.pageDensityWriting,
       this.elements.genre,
@@ -334,6 +335,7 @@ connectedCallback() {
       this.elements.discussionFormat,
       this.elements.avgLength,
       this.elements.avgLengthMinutes,
+      this.elements.discussionHoursPerWeek,
       this.elements.exams,
       this.elements.studyHours,
       this.elements.takeHomeExams,

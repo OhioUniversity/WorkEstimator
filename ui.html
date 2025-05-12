@@ -45,52 +45,51 @@
         </div>
       </div>
     </div>
+    <div class="column">
+      <h4>Writing Assignments</h4>
+      <div class="panel">
+        <label for="semesterPagesInput">Pages per Semester:</label>
+        <input type="number" id="semesterPagesInput" value="0" min="0" />
 
-        <div class="column">
-          <h4>Writing Assignments</h4>
-          <div class="panel">
-            <label for="semesterPagesInput">Pages per Semester:</label>
-            <input type="number" id="semesterPagesInput" value="0" min="0" />
+        <label>Page Density:</label>
+        <select id="pageDensityWritingSelect">
+          <option value="250 Words">250 Words</option>
+          <option value="500 Words">500 Words</option>
+        </select>
 
-            <label>Page Density:</label>
-            <select id="pageDensityWritingSelect">
-              <option value="250 Words">250 Words</option>
-              <option value="500 Words">500 Words</option>
-            </select>
+        <label>Genre:</label>
+        <select id="genreSelect">
+          <option value="Reflection/Narrative">Reflection/Narrative</option>
+          <option value="Argument">Argument</option>
+          <option value="Research">Research</option>
+        </select>
 
-            <label>Genre:</label>
-            <select id="genreSelect">
-              <option value="Reflection/Narrative">Reflection/Narrative</option>
-              <option value="Argument">Argument</option>
-              <option value="Research">Research</option>
-            </select>
+        <label>Drafting:</label>
+        <select id="draftingSelect">
+          <option value="No Drafting">No Drafting</option>
+          <option value="Minimal Drafting">Minimal Drafting</option>
+          <option value="Extensive Drafting">Extensive Drafting</option>
+        </select>
 
-            <label>Drafting:</label>
-            <select id="draftingSelect">
-              <option value="No Drafting">No Drafting</option>
-              <option value="Minimal Drafting">Minimal Drafting</option>
-              <option value="Extensive Drafting">Extensive Drafting</option>
-              </select>
-
-              <label for="writingRateDisplay">Estimated Writing Rate:</label>
-              <div id="writingRateDisplay">
-                <p>${this.writingRate} hours per page</p>
-              </div>
-
-              <div id="writingRatePanel">
-                <label for="writingRateCheckbox">Manually Adjust Writing Rate:</label>
-                <input type="checkbox" id="writingRateCheckbox" />
-              <div id="writingRateContainer" class="hidden">
-                <label for="hoursPerPageInput">Hours Per Written Page:</label>
-                <input type="number" id="hoursPerPageInput" value="0.5" min="0" />
-              </div>
-            </div>
-            <h4>Videos / Podcasts</h4>
-            <div class="panel">
-                <label for="Hours per Week">Hours per Week:</label>
-                <input type="number" id="weeklyVideosInput" value="0" min="0" />
-            </div>
+        <label for="writingRateDisplay">Estimated Writing Rate:</label>
+        <div id="writingRateDisplay">
+          <p>${this.writingRate} hours per page</p>
         </div>
+
+        <div id="writingRatePanel">
+          <label for="writingRateCheckbox">Manually Adjust Writing Rate:</label>
+          <input type="checkbox" id="writingRateCheckbox" />
+            <div id="writingRateContainer" class="hidden">
+              <label for="hoursPerPageInput">Hours Per Written Page:</label>
+              <input type="number" id="hoursPerPageInput" value="0.5" min="0" />
+            </div>
+          </div>
+        </div>
+      <h4>Videos / Podcasts</h4>
+      <div class="panel">
+          <label for="Hours per Week">Hours per Week:</label>
+          <input type="number" id="weeklyVideosInput" value="0" min="0" />
+      </div>
     </div>
     <div class="column"> 
       <h4>Discussion Posts</h4>
@@ -173,6 +172,5 @@
           <div id="contact">Contact: ${this.contact} hours/week</div>
         </div>
     </div>
-
   </div>
 </div>
