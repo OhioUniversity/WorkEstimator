@@ -80,7 +80,6 @@ class WorkloadEstimator extends HTMLElement {
     this.writingRate = 0.75;
     this.hoursPerWeekDiscussion = 0.0;
   }
-}
 
 connectedCallback() {
   // Run the initial calculation on component load
@@ -382,6 +381,6 @@ connectedCallback() {
       this.elements.sliderValue.textContent = this.elements.hoursPerAssignment.value;
     });
   }
-
+}
 // Register the custom element
 customElements.define('workload-estimator', WorkloadEstimator)
