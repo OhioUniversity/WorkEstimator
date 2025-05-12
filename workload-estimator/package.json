@@ -1,0 +1,21 @@
+{
+  "name": "workload-estimator",
+  "version": "1.0.0",
+  "main": "ui.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web component",
+    "workload",
+    "estimator",
+    "course",
+    "javascript"
+  ],
+  "author": "Kylie Roenigk",
+  "license": "ISC",
+  "description": "A web component for estimating course workload.",
+  "files": [
+    "ui.js"
+  ]
+}

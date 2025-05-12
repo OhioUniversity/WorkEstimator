@@ -1,0 +1,77 @@
+:host {
+        display: block;
+        font-family: Arial, sans-serif;
+        margin: 0.5rem;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0.5rem;
+      }
+
+      h3, h4, p {
+        text-align: center;
+        margin: 0.5rem 0;
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .panel {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin: 0.3rem 0 0.1rem;
+        font-weight: bold;
+      }
+
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 0.4rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
+
+      input[type="checkbox"] {
+        margin-right: 0.5rem;
+      }
+
+      .slider-value {
+        display: inline-block;
+        min-width: 40px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .workload-estimate {
+        text-align: center;
+        margin-top: 1rem;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+      .hidden {
+        display: none;
+      }
