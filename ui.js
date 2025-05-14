@@ -13,7 +13,7 @@
 /// These are the different rates for reading and writing based on the type of assignment and the difficulty level
 /// this data is based on the following sources:
 /// https://cat.wfu.edu/resources/workload/estimationdetails/
-const pagesPerHour = {
+const pagesPerHourData = {
   "No New Concepts": {
     Survey: { "450 Words": 67, "600 Words": 50, "750 Words": 40 },
     Understand: { "450 Words": 33, "600 Words": 25, "750 Words": 20 },
@@ -66,19 +66,19 @@ class WorkloadEstimator extends HTMLElement {
         container.innerHTML = html;
         shadow.appendChild(container);
 
-        // Initialize elements and event listeners
+        // Initialize elements and event listeners after the HTML is loaded
         const inputValues = initializeElements(this.shadowRoot);
+        console.log('Input Values:', inputValues); // Debug log to verify elements
         initializeEventListeners(inputValues, this.shadowRoot);
       })
       .catch((error) => console.error('Error loading UI content:', error));
-
-    // Initialize default values
-    this.total = 0;
-    this.independent = 0;
-    this.contact = 0;
-    this.readingRate = 67;
-    this.writingRate = 0.75;
-    this.hoursPerWeekDiscussion = 0.0;
+      // Initialize default values
+      this.total = 0;
+      this.independent = 0;
+      this.contact = 0;
+      this.readingRate = 67;
+      this.writingRate = 0.75;
+      this.hoursPerWeekDiscussion = 0.0;
   }
 
 connectedCallback() {
@@ -91,7 +91,7 @@ connectedCallback() {
   initializeEventListeners(inputValues, this.shadowRoot);
   console.log('Event listeners initialized');
 
-  const workload = calculateWorkload(inputValues);
+  const workload = calculateWorkload(inputValues, this.shadowRoot);
 
   // Update the UI with the initial workload estimates
   updateWorkloadEstimates(
@@ -106,7 +106,7 @@ connectedCallback() {
 }
 
 function initializeElements(shadowRoot) {
-  return {
+  const elements = {
     classWeeks: shadowRoot.querySelector('#classWeeks'),
     readingPages: shadowRoot.querySelector('#weeklyPagesInput'),
     pageDensity: shadowRoot.querySelector('#pageDensitySelect'),
@@ -150,22 +150,26 @@ function initializeElements(shadowRoot) {
     writingRateDisplay: shadowRoot.querySelector('#writingRateDisplay'),
     hoursPerWeekDiscussionDisplay: shadowRoot.querySelector('#hoursPerWeekDiscussionDisplay'),
   };
+  console.log('Initialized Elements:', elements);
+  return elements;
 }
   
   function initializeEventListeners(inputValues, shadowRoot) {
   // Attach event listeners to all input elements in inputValues
   Object.values(inputValues).forEach((input) => {
     if (input && (input.tagName === 'INPUT' || input.tagName === 'SELECT')) {
-      input.addEventListener('input', () => {
+      const eventType = input.type === 'checkbox' || input.type === 'radio' ? 'change' : 'input';
+      input.addEventListener(eventType, () => {
         const updatedInputValues = initializeElements(shadowRoot); // Reinitialize input values
-        const workload = calculateWorkload(updatedInputValues);
+        const workload = calculateWorkload(updatedInputValues, shadowRoot);
         updateWorkloadEstimates(
           workload.total,
           workload.independentTime,
           workload.contactTime,
           workload.readingRate,
           workload.writingRate,
-          workload.discussionTime
+          workload.discussionTime,
+          shadowRoot
         );
       });
     }
@@ -178,19 +182,21 @@ function initializeElements(shadowRoot) {
     { checkbox: shadowRoot.querySelector('#discussionRateCheckbox'), container: shadowRoot.querySelector('#discussionRateContainer') },
     { checkbox: shadowRoot.querySelector('#takeHomeExamsCheckbox'), container: shadowRoot.querySelector('#takeHomeExamsContainer') },
   ];
+  console.log('Checkboxes:', checkboxes);
 
   checkboxes.forEach(({ checkbox, container }) => {
     checkbox.addEventListener('change', (e) => {
       container.classList.toggle('hidden', !e.target.checked);
       const updatedInputValues = initializeElements(shadowRoot); // Reinitialize input values
-      const workload = calculateWorkload(updatedInputValues);
+      const workload = calculateWorkload(updatedInputValues, shadowRoot);
       updateWorkloadEstimates(
         workload.total,
         workload.independentTime,
         workload.contactTime,
         workload.readingRate,
         workload.writingRate,
-        workload.discussionTime
+        workload.discussionTime,
+        shadowRoot
       );
     });
   });
@@ -207,14 +213,15 @@ function initializeElements(shadowRoot) {
       audioInputContainer.classList.remove('hidden');
     }
     const updatedInputValues = initializeElements(shadowRoot); // Reinitialize input values
-    const workload = calculateWorkload(updatedInputValues);
+    const workload = calculateWorkload(updatedInputValues, shadowRoot);
     updateWorkloadEstimates(
       workload.total,
       workload.independentTime,
       workload.contactTime,
       workload.readingRate,
       workload.writingRate,
-      workload.discussionTime
+      workload.discussionTime,
+      shadowRoot
     );
   });
 
@@ -222,159 +229,150 @@ function initializeElements(shadowRoot) {
   shadowRoot.querySelector('#hoursPerAssignmentInput').addEventListener('input', (e) => {
     shadowRoot.querySelector('#sliderValue').textContent = e.target.value;
     const updatedInputValues = initializeElements(shadowRoot); // Reinitialize input values
-    const workload = calculateWorkload(updatedInputValues);
+    const workload = calculateWorkload(updatedInputValues, shadowRoot);
     updateWorkloadEstimates(
       workload.total,
       workload.independentTime,
       workload.contactTime,
       workload.readingRate,
       workload.writingRate,
-      workload.discussionTime
+      workload.discussionTime,
+      shadowRoot
     );
   });
 }
 /// This function will update the workload estimates and rates in the UI
-  function updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, hoursPerWeekDiscussion) {
-    this.shadowRoot.querySelector('#total').textContent = `Total: ${total.toFixed(2)} hours/week`;
-    this.shadowRoot.querySelector('#independent').textContent = `Independent: ${independent.toFixed(2)} hours/week`;
-    this.shadowRoot.querySelector('#contact').textContent = `Contact: ${contact.toFixed(2)} hours/week`;
-    this.shadowRoot.querySelector('#readingRateDisplay').textContent = `${readingRate.toFixed(0)} pages per hour`;
-    this.shadowRoot.querySelector('#writingRateDisplay').textContent = `${writingRate.toFixed(2)} hours per page`;
-    this.shadowRoot.querySelector('#hoursPerWeekDiscussionDisplay').textContent = `${hoursPerWeekDiscussion.toFixed(2)} hours/week`;
+  function updateWorkloadEstimates(total, independent, contact, readingRate, writingRate, hoursPerWeekDiscussion, shadowRoot) {
+    shadowRoot.querySelector('#total').textContent = `Total: ${total.toFixed(2)} hours/week`;
+    shadowRoot.querySelector('#independent').textContent = `Independent: ${independent.toFixed(2)} hours/week`;
+    shadowRoot.querySelector('#contact').textContent = `Contact: ${contact.toFixed(2)} hours/week`;
+    shadowRoot.querySelector('#readingRateDisplay').textContent = `${readingRate.toFixed(0)} pages per hour`;
+    shadowRoot.querySelector('#writingRateDisplay').textContent = `${writingRate.toFixed(2)} hours per page`;
+    shadowRoot.querySelector('#hoursPerWeekDiscussionDisplay').textContent = `${hoursPerWeekDiscussion.toFixed(2)} hours/week`;
   }
 
   /// Calculates the total weekly workload based on user inputs.
   /// - Computes independent and contact hours for activities like reading, writing, discussions, exams, and class meetings.
   /// - Updates the workload estimates and rates dynamically in the UI.
-  function calculateWorkload(inputValues) {
-    console.log('Calculating workload with input values:', inputValues);
-    const {
-      classWeeks,
-      readingPages,
-      pageDensity,
-      difficulty,
-      purpose,
-      pagesPerHour,
-      semesterPages,
-      pageDensityWriting,
-      genre,
-      drafting,
-      hoursPerPage,
-      weeklyVideos,
-      discussionPosts,
-      discussionFormat,
-      avgLength,
-      avgLengthMinutes,
-      discussionHoursPerWeek,
-      exams,
-      studyHours,
-      takeHomeExams,
-      examTimeLimit,
-      numberPerSemester,
-      hoursPerAssignment,
-      independent,
-      meetingsPerWeek,
-      meetingLength,
-    } = inputValues;
+  function calculateWorkload(inputValues, shadowRoot) {
+  const {
+    classWeeks,
+    readingPages,
+    pageDensity,
+    difficulty,
+    purpose,
+    pagesPerHour,
+    semesterPages,
+    pageDensityWriting,
+    genre,
+    drafting,
+    hoursPerPage,
+    weeklyVideos,
+    discussionPosts,
+    discussionFormat,
+    avgLength,
+    avgLengthMinutes,
+    discussionHoursPerWeek,
+    exams,
+    studyHours,
+    takeHomeExams,
+    examTimeLimit,
+    numberPerSemester,
+    hoursPerAssignment,
+    meetingsPerWeek,
+    meetingLength,
+    readingRateCheckbox,
+    writingRateCheckbox,
+    discussionRateCheckbox,
+    independent
+  } = inputValues;
 
-    // Reading workload calculation
-    let readingRate;
-    if (!this.elements.readingRateCheckbox.checked) {
-      readingRate = pagesPerHour[difficulty][purpose][pageDensity];
-      this.readingRate = readingRate;
-    } else {
-      readingRate = pagesPerHour;
-      this.readingRate = readingRate;
+  // Parse values with defaults
+  const classWeeksValue = parseInt(classWeeks?.value || '1', 10);
+  const readingPagesValue = parseInt(readingPages?.value || '0', 10);
+  const semesterPagesValue = parseFloat(semesterPages?.value || '0', 10);
+  const weeklyVideosValue = parseFloat(weeklyVideos?.value || '0', 10);
+  const discussionPostsPerWeek = parseFloat(discussionPosts?.value || '0', 10);
+  const avgLengthValue = parseFloat(avgLength?.value || '0', 10);
+  const avgLengthMinutesValue = parseFloat(avgLengthMinutes?.value || '0', 10);
+  const discussionHoursPerWeekValue = parseFloat(discussionHoursPerWeek?.value || '0', 10);
+  const examsValue = parseFloat(exams?.value || '0', 10);
+  const studyHoursValue = parseFloat(studyHours?.value || '0', 10);
+  const examTimeLimitValue = parseFloat(examTimeLimit?.value || '0', 10);
+  const numberPerSemesterValue = parseFloat(numberPerSemester?.value || '0', 10);
+  const hoursPerAssignmentValue = parseFloat(hoursPerAssignment?.value || '0', 10);
+  const meetingsPerWeekValue = parseFloat(meetingsPerWeek?.value || '0', 10);
+  const meetingLengthValue = parseFloat(meetingLength?.value || '0', 10);
+
+  // Reading workload calculation
+  let readingRate;
+  if (!readingRateCheckbox.checked) {
+    const difficultyValue = difficulty?.value || 'No New Concepts';
+    const purposeValue = purpose?.value || 'Survey';
+    const pageDensityValue = pageDensity?.value || '450 Words';
+    readingRate = pagesPerHourData[difficultyValue]?.[purposeValue]?.[pageDensityValue] || 0;
+  } else {
+    readingRate = parseFloat(pagesPerHour?.value || '0');
+  }
+  const readingTime = readingPagesValue / (readingRate || 1); // Avoid division by zero
+
+  // Writing workload calculation
+  let writingRate;
+  if (!writingRateCheckbox.checked) {
+    const pageDensityWritingValue = pageDensityWriting?.value || '250 Words';
+    const draftingValue = drafting?.value || 'No Drafting';
+    const genreValue = genre?.value || 'Reflection/Narrative';
+    writingRate = hoursPerWriting[pageDensityWritingValue]?.[draftingValue]?.[genreValue] || 0; // Default to 0 if not found
+  } else {
+    writingRate = parseFloat(hoursPerPage?.value || '0');
+  }
+  const writingTime = (semesterPagesValue * (writingRate || 0)) / classWeeksValue;
+
+  // Videos workload calculation
+  const videoTime = weeklyVideosValue;
+
+  // Discussion workload calculation
+  let discussionRate;
+  let discussionTime;
+  if (!discussionRateCheckbox.checked) {
+    if (discussionFormat?.value === 'Text') {
+      discussionRate = avgLengthValue * 0.004; // Words to hours
+    } else if (discussionFormat?.value === 'Audio/Video') {
+      discussionRate = avgLengthMinutesValue / 3; // Minutes to hours
     }
-    const readingTime = readingPages / (readingRate || 1); // Avoid division by zero
-
-    // Writing workload calculation
-    let writingRate;
-    if (!this.elements.writingRateCheckbox.checked) {
-      writingRate = hoursPerWriting[pageDensityWriting][drafting][genre];
-      this.writingRate = writingRate;
-    } else {
-      writingRate = hoursPerPage;
-      this.writingRate = writingRate;
-    }
-    const writingTime = (semesterPages * (writingRate || 0)) / classWeeks;
-
-    // Videos workload calculation
-    const videoTime = weeklyVideos;
-
-    // Discussion workload calculation
-    let discussionRate;
-    if (!this.elements.discussionRateCheckbox.checked) {
-      if (discussionFormat === 'Text') {
-        discussionRate = avgLength * 0.004;
-      } else if (discussionFormat === 'Audio/Video') {
-        discussionRate = avgLengthMinutes / 3;
-      }
-    } else {
-      discussionRate = discussionHoursPerWeek;
-    }
-    const discussionTime = discussionPosts * (discussionRate || 0);
-    this.hoursPerWeekDiscussion = discussionTime;
-
-    // Exams workload calculation
-    let examTime = 0;
-    if (takeHomeExams) {
-      examTime = examTimeLimit / 60; // Convert minutes to hours
-    }
-    const examsTime = (exams * (studyHours + examTime)) / classWeeks;
-
-    // Other assignments workload calculation
-    const otherTime = (hoursPerAssignment * numberPerSemester) / classWeeks;
-
-    // Class meetings workload calculation
-    const classMeetingTime = meetingsPerWeek * meetingLength;
-
-    // Independent and Contact workload calculation
-    let independentTime = readingTime + writingTime + videoTime + examsTime;
-    let contactTime = discussionTime + classMeetingTime;
-    if (independent) {
-      independentTime += otherTime;
-    } else {
-      contactTime += otherTime;
-    }
-
-    // Total workload calculation
-    const total = independentTime + contactTime;
-
-    // Return the calculated values
-    return { total, independentTime, contactTime, readingRate, writingRate, discussionTime };
+    discussionTime = discussionPostsPerWeek * (discussionRate || 0);
+  } else {
+    discussionTime = discussionHoursPerWeekValue;
   }
 
-  // function getInputValues() {
-  //   return {
-  //     classWeeks: parseInt(this.elements.classWeeks.value || '1', 10),
-  //     readingPages: parseInt(this.elements.readingPages.value || '0', 10),
-  //     pageDensity: this.elements.pageDensity.value,
-  //     difficulty: this.elements.difficulty.value,
-  //     purpose: this.elements.purpose.value,
-  //     pagesPerHour: parseInt(this.elements.pagesPerHour.value || '0', 10),
-  //     semesterPages: parseInt(this.elements.semesterPages.value || '0', 10),
-  //     pageDensityWriting: this.elements.pageDensityWriting.value,
-  //     genre: this.elements.genre.value,
-  //     drafting: this.elements.drafting.value,
-  //     hoursPerPage: parseFloat(this.elements.hoursPerPage.value || '0'),
-  //     weeklyVideos: parseInt(this.elements.weeklyVideos.value || '0', 10),
-  //     discussionPosts: parseInt(this.elements.discussionPosts.value || '0', 10),
-  //     discussionFormat: this.elements.discussionFormat.value,
-  //     avgLength: parseInt(this.elements.avgLength.value || '0', 10),
-  //     avgLengthMinutes: parseInt(this.elements.avgLengthMinutes.value || '0', 10),
-  //     discussionHoursPerWeek: parseFloat(this.elements.discussionHoursPerWeek.value || '0'),
-  //     exams: parseInt(this.elements.exams.value || '0', 10),
-  //     studyHours: parseFloat(this.elements.studyHours.value || '0'),
-  //     takeHomeExams: this.elements.takeHomeExams.checked,
-  //     examTimeLimit: parseFloat(this.elements.examTimeLimit.value || '0'),
-  //     numberPerSemester: parseInt(this.elements.numberPerSemester.value || '0', 10),
-  //     hoursPerAssignment: parseInt(this.elements.hoursPerAssignment.value || '0', 10),
-  //     independent: this.elements.independent.checked,
-  //     meetingsPerWeek: parseInt(this.elements.meetingsPerWeek.value || '0', 10),
-  //     meetingLength: parseFloat(this.elements.meetingLength.value || '0'),
-  //   };
-  // }
+  // Exams workload calculation
+  let examTime = 0;
+  if (takeHomeExams?.checked) {
+    examTime = examTimeLimitValue / 60; // Convert minutes to hours
+  }
+  const examsTime = (examsValue * (studyHoursValue + examTime)) / classWeeksValue;
+
+  // Other assignments workload calculation
+  const otherTime = (hoursPerAssignmentValue * numberPerSemesterValue) / classWeeksValue;
+
+  // Class meetings workload calculation
+  const classMeetingTime = meetingsPerWeekValue * meetingLengthValue;
+
+  // Independent and Contact workload calculation
+  let independentTime = readingTime + writingTime + videoTime + examsTime;
+  let contactTime = discussionTime + classMeetingTime;
+  if (independent?.checked) {
+    independentTime += otherTime;
+  } else {
+    contactTime += otherTime;
+  }
+
+  // Total workload calculation
+  const total = independentTime + contactTime;
+
+  // Return the calculated values
+  return { total, independentTime, contactTime, readingRate, writingRate, discussionTime };
+}
 
 // Register the custom element
 customElements.define('workload-estimator', WorkloadEstimator)
