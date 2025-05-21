@@ -59,13 +59,6 @@
         margin-right: 0.5rem;
       }
 
-      .slider-value {
-        display: inline-block;
-        min-width: 40px;
-        text-align: center;
-        font-weight: bold;
-      }
-
       .workload-estimate {
         text-align: center;
         margin-top: 1rem;
@@ -74,4 +67,13 @@
       }
       .hidden {
         display: none;
+      }
+
+      #readingRateDisplay,
+      #writingRateDisplay,
+      #hoursPerWeekDiscussionDisplay {
+        text-align: center;
+        min-width: 150px;
+        display: block;
+        margin: 0.5rem 0;
       }

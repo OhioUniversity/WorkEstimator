@@ -6,12 +6,12 @@
     <div class="column">
       <h4>Course Info</h4>
       <div class="panel">
-        <label for="Class Duration (Weeks)">Class Duration (Weeks):</label>
+        <label>Class Duration (Weeks):</label>
         <input type="number" id="classWeeks" value="15" min="0" />
       </div>
       <h4>Reading Assignments</h4>
       <div class="panel">
-        <label for="weeklyPagesInput">Pages per Week:</label>
+        <label>Pages per Week:</label>
         <input type="number" id="weeklyPagesInput" value="0" min="0" />
         <label>Page Density:</label>
         <select id="pageDensitySelect">
@@ -31,15 +31,14 @@
           <option value="Understand">Understand</option>
           <option value="Engage">Engage</option>
         </select>
-        <label for="readingRateDisplay">Estimated Reading Rate:</label>
+        <label>Estimated Reading Rate:</label>
         <div id="readingRateDisplay">
           <p>67 pages per hour</p>
         </div>
         <div id="readingRatePanel">
-          <label for="readingRateCheckbox">Manually Adjust Reading Rate:</label>
-          <input type="checkbox" id="readingRateCheckbox" />
+          <input type="checkbox" id="readingRateCheckbox">Manually Adjust</input>
           <div id="readingRateContainer" class="hidden">
-            <label for="pagesPerHourInput">Pages Read Per Hour:</label>
+            <label>Pages Read Per Hour:</label>
             <input type="number" id="pagesPerHourInput" value="10" min="0" />
           </div>
         </div>
@@ -48,7 +47,7 @@
     <div class="column">
       <h4>Writing Assignments</h4>
       <div class="panel">
-        <label for="semesterPagesInput">Pages per Semester:</label>
+        <label>Pages per Semester:</label>
         <input type="number" id="semesterPagesInput" value="0" min="0" />
 
         <label>Page Density:</label>
@@ -71,30 +70,29 @@
           <option value="Extensive Drafting">Extensive Drafting</option>
         </select>
 
-        <label for="writingRateDisplay">Estimated Writing Rate:</label>
+        <label>Estimated Writing Rate:</label>
         <div id="writingRateDisplay">
-          <p>${this.writingRate} hours per page</p>
+          <p>0.75 hours per page</p>
         </div>
 
         <div id="writingRatePanel">
-          <label for="writingRateCheckbox">Manually Adjust Writing Rate:</label>
-          <input type="checkbox" id="writingRateCheckbox" />
+          <input type="checkbox" id="writingRateCheckbox" >Manually Adjust</input>
             <div id="writingRateContainer" class="hidden">
-              <label for="hoursPerPageInput">Hours Per Written Page:</label>
+              <label>Hours Per Written Page:</label>
               <input type="number" id="hoursPerPageInput" value="0.5" min="0" />
             </div>
           </div>
         </div>
       <h4>Videos / Podcasts</h4>
       <div class="panel">
-          <label for="Hours per Week">Hours per Week:</label>
+          <label>Hours per Week:</label>
           <input type="number" id="weeklyVideosInput" value="0" min="0" />
       </div>
     </div>
     <div class="column"> 
       <h4>Discussion Posts</h4>
       <div class="panel">
-        <label for="discussionPostsInput">Posts per Week:</label>
+        <label>Posts per Week:</label>
         <input type="number" id="discussionPostsInput" value="0" min="0" />
 
         <label>Format:</label>
@@ -104,42 +102,40 @@
         </select>
 
         <div id="textInputContainer">
-          <label for="avgLengthInput">Avg. Length (Words):</label>
+          <label>Avg. Length (Words):</label>
           <input type="number" id="avgLengthInput" value="250" min="0" />
         </div>
 
         <div id="audioInputContainer" class="hidden">
-          <label for="avgLengthMinutesInput">Avg. Length (Minutes):</label>
+          <label>Avg. Length (Minutes):</label>
           <input type="number" id="avgLengthMinutesInput" value="3" min="0" />
         </div>
 
-        <label for="hoursPerWeekDiscussionDisplay">Estimated Hours:</label>
+        <label>Estimated Hours:</label>
         <div id="hoursPerWeekDiscussionDisplay">
-          <p>${this.hoursPerWeekDiscussion} hours/week</p>
+          <p>0.00 hours/week</p>
         </div>
 
         <div id="discussionRatePanel">
-          <label for="discussionRateCheckbox">Manually Adjust Discussion Rate:</label>
-          <input type="checkbox" id="discussionRateCheckbox" />
+          <input type="checkbox" id="discussionRateCheckbox" >Manually Adjust</input>
           <div id="discussionRateContainer" class="hidden">
-            <label for="hoursPerWeekInput">Hours Per Week:</label>
+            <label>Hours Per Week:</label>
             <input type="number" id="hoursPerWeekInput" value="1" min="0" />
           </div>
         </div>
       </div>
       <h4>Exams</h4>
       <div class="panel">
-        <label for="examsInput">Exams per Semester:</label>
+        <label>Exams per Semester:</label>
         <input type="number" id="examsInput" value="0" min="0" />
 
-        <label for="studyHoursInput">Study Hours per Exam:</label>
+        <label>Study Hours per Exam:</label>
         <input type="number" id="studyHoursInput" value="5" min="0" />
 
-        <label for="takeHomeExamsCheckbox">Take-Home Exams:</label>
-        <input type="checkbox" id="takeHomeExamsCheckbox" />
+        <input type="checkbox" id="takeHomeExamsCheckbox"> Take-Home Exams</input>
 
         <div id="takeHomeExamsContainer" class="hidden">
-          <label for="examTimeLimitInput">Exam Time Limit (in Minutes):</label>
+          <label>Exam Time Limit (in Minutes):</label>
           <input type="number" id="examTimeLimitInput" value="60" min="0" />
         </div>
       </div>
@@ -147,10 +143,10 @@
     <div class="column">
       <h4>Other Assignments</h4>
       <div class="panel">
-        <label for="numberPerSemesterInput"># Per Semester:</label>
+        <label># Per Semester:</label>
         <input type="number" id="numberPerSemesterInput" value="0" min="0" />
 
-        <label for="hoursPerAssignmentInput">Hours Per Assignment:</label>
+        <label>Hours Per Assignment:</label>
         <div style="display: flex; align-items: center; gap: 10px;">
           <input type="range" id="hoursPerAssignmentInput" value="0" min="0" max="50" step="1" />
           <span id="sliderValue">0</span>
@@ -160,16 +156,16 @@
       </div>  
         <h4>Class Meetings</h4>
         <div class="panel">
-          <label for="meetingsPerWeek">Live Meetings Per Week: </label>
+          <label>Live Meetings Per Week: </label>
           <input type="number" id="meetingsPerWeek" value="0" min="0" />
-          <label for="meeting length">Meeting Length (Hours): </label>
+          <label>Meeting Length (Hours): </label>
           <input type="number" id="meetingLength" value="0" min="0" />
         </div>
         <h4>Workload Estimates</h4>
         <div class="panel">
-          <div id="total">Total: ${this.total} hours/week</div>
-          <div id="independent">Independent: ${this.independent} hours/week</div>
-          <div id="contact">Contact: ${this.contact} hours/week</div>
+          <div id="total">Total: 0.00 hours/week</div>
+          <div id="independent">Independent: 0.00 hours/week</div>
+          <div id="contact">Contact: 0.00 hours/week</div>
         </div>
     </div>
   </div>
