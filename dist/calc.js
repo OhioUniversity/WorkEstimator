@@ -55,9 +55,9 @@ function calculateWorkload(inputValues) {
     // Reading workload calculation
     var readingRate;
     if (!readingRateCheckbox.checked) {
-        var difficultyValue = (difficulty === null || difficulty === void 0 ? void 0 : difficulty.value) || 'No New Concepts';
-        var purposeValue = (purpose === null || purpose === void 0 ? void 0 : purpose.value) || 'Survey';
-        var pageDensityValue = (pageDensity === null || pageDensity === void 0 ? void 0 : pageDensity.value) || '450 Words';
+        var difficultyValue = ((difficulty === null || difficulty === void 0 ? void 0 : difficulty.value) || 'No New Concepts');
+        var purposeValue = ((purpose === null || purpose === void 0 ? void 0 : purpose.value) || 'Survey');
+        var pageDensityValue = ((pageDensity === null || pageDensity === void 0 ? void 0 : pageDensity.value) || '450 Words');
         readingRate = ((_b = (_a = pagesPerHourData[difficultyValue]) === null || _a === void 0 ? void 0 : _a[purposeValue]) === null || _b === void 0 ? void 0 : _b[pageDensityValue]) || 0;
     }
     else {
@@ -67,9 +67,9 @@ function calculateWorkload(inputValues) {
     // Writing workload calculation
     var writingRate;
     if (!writingRateCheckbox.checked) {
-        var pageDensityWritingValue = (pageDensityWriting === null || pageDensityWriting === void 0 ? void 0 : pageDensityWriting.value) || '250 Words';
-        var draftingValue = (drafting === null || drafting === void 0 ? void 0 : drafting.value) || 'No Drafting';
-        var genreValue = (genre === null || genre === void 0 ? void 0 : genre.value) || 'Reflection/Narrative';
+        var pageDensityWritingValue = ((pageDensityWriting === null || pageDensityWriting === void 0 ? void 0 : pageDensityWriting.value) || '250 Words');
+        var draftingValue = ((drafting === null || drafting === void 0 ? void 0 : drafting.value) || 'No Drafting');
+        var genreValue = ((genre === null || genre === void 0 ? void 0 : genre.value) || 'Reflection/Narrative');
         writingRate = ((_d = (_c = hoursPerWriting[pageDensityWritingValue]) === null || _c === void 0 ? void 0 : _c[draftingValue]) === null || _d === void 0 ? void 0 : _d[genreValue]) || 0; // Default to 0 if not found
     }
     else {

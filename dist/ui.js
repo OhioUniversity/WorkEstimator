@@ -38,10 +38,10 @@ var WorkloadEstimator = /** @class */ (function (_super) {
         // Load external CSS
         var link = document.createElement('link');
         link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('href', 'ui.css');
+        link.setAttribute('href', 'src/ui.css');
         shadow.appendChild(link);
         // Fetch and load the HTML content
-        fetch('ui.html')
+        fetch('src/ui.html')
             .then(function (response) { return response.text(); })
             .then(function (html) {
             var container = document.createElement('div');

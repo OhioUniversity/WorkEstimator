@@ -13,7 +13,7 @@
 /// These are the different rates for reading and writing based on the type of assignment and the difficulty level
 /// this data is based on the following sources:
 /// https://cat.wfu.edu/resources/workload/estimationdetails/
-import { calculateWorkload } from './calc.ts';
+import { calculateWorkload } from './calc.js';
 
 
 
@@ -27,11 +27,11 @@ class WorkloadEstimator extends HTMLElement {
     // Load external CSS
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('href', 'ui.css');
+    link.setAttribute('href', 'src/ui.css');
     shadow.appendChild(link);
 
     // Fetch and load the HTML content
-    fetch('ui.html')
+    fetch('src/ui.html')
       .then((response) => response.text())
       .then((html) => {
         const container = document.createElement('div');

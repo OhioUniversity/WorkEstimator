@@ -32,7 +32,7 @@ const hoursPerWriting = {
   }
 };
 
-  export function calculateWorkload(inputValues) {
+  export function calculateWorkload(inputValues: { classWeeks: any; readingPages: any; pageDensity: any; difficulty: any; purpose: any; pagesPerHour: any; semesterPages: any; pageDensityWriting: any; genre: any; drafting: any; hoursPerPage: any; weeklyVideos: any; discussionPosts: any; discussionFormat: any; avgLength: any; avgLengthMinutes: any; discussionHoursPerWeek: any; exams: any; studyHours: any; takeHomeExams: any; examTimeLimit: any; numberPerSemester: any; hoursPerAssignment: any; independent: any; meetingsPerWeek: any; meetingLength: any; readingRateCheckbox: any; writingRateCheckbox: any; discussionRateCheckbox: any; readingRateContainer?: {}; writingRateContainer?: {}; discussionRateContainer?: {}; takeHomeExamsContainer?: {}; textInputContainer?: {}; audioInputContainer?: {}; sliderValue?: Element | { textContent: string; }; total?: Element | { textContent: string; }; independentDisplay?: Element | { textContent: string; }; contact?: Element | { textContent: string; }; readingRateDisplay?: Element | { textContent: string; }; writingRateDisplay?: Element | { textContent: string; }; hoursPerWeekDiscussionDisplay?: Element | { textContent: string; }; }) {
   const {
     classWeeks,
     readingPages,
@@ -85,9 +85,9 @@ const hoursPerWriting = {
   // Reading workload calculation
   let readingRate;
   if (!readingRateCheckbox.checked) {
-    const difficultyValue = difficulty?.value || 'No New Concepts';
-    const purposeValue = purpose?.value || 'Survey';
-    const pageDensityValue = pageDensity?.value || '450 Words';
+    const difficultyValue = (difficulty?.value || 'No New Concepts') as keyof typeof pagesPerHourData;
+    const purposeValue = (purpose?.value || 'Survey') as keyof typeof pagesPerHourData["No New Concepts"];
+    const pageDensityValue = (pageDensity?.value || '450 Words') as keyof typeof pagesPerHourData["No New Concepts"]["Survey"];
     readingRate = pagesPerHourData[difficultyValue]?.[purposeValue]?.[pageDensityValue] || 0;
   } else {
     readingRate = parseFloat(pagesPerHour?.value || '0');
@@ -96,10 +96,13 @@ const hoursPerWriting = {
 
   // Writing workload calculation
   let writingRate;
+  type PageDensityWritingKey = keyof typeof hoursPerWriting;
+  type DraftingKey = keyof typeof hoursPerWriting["250 Words"];
+  type GenreKey = keyof typeof hoursPerWriting["250 Words"]["No Drafting"];
   if (!writingRateCheckbox.checked) {
-    const pageDensityWritingValue = pageDensityWriting?.value || '250 Words';
-    const draftingValue = drafting?.value || 'No Drafting';
-    const genreValue = genre?.value || 'Reflection/Narrative';
+    const pageDensityWritingValue = (pageDensityWriting?.value || '250 Words') as PageDensityWritingKey;
+    const draftingValue = (drafting?.value || 'No Drafting') as DraftingKey;
+    const genreValue = (genre?.value || 'Reflection/Narrative') as GenreKey;
     writingRate = hoursPerWriting[pageDensityWritingValue]?.[draftingValue]?.[genreValue] || 0; // Default to 0 if not found
   } else {
     writingRate = parseFloat(hoursPerPage?.value || '0');
