@@ -148,6 +148,15 @@ const hoursPerWriting = {
   // Total workload calculation
   const total = independentTime + contactTime;
 
+  const workload = {
+    total,
+    independentTime,
+    contactTime,
+    readingRate,
+    writingRate,
+    discussionTime
+  };
+
   // Return the calculated values
-  return { total, independentTime, contactTime, readingRate, writingRate, discussionTime };
+  return { workload };
 }
