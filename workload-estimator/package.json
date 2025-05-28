@@ -1,21 +1,15 @@
 {
   "name": "workload-estimator",
-  "version": "1.0.0",
-  "main": "ui.js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "keywords": [
-    "web component",
-    "workload",
-    "estimator",
-    "course",
-    "javascript"
-  ],
-  "author": "Kylie Roenigk",
-  "license": "ISC",
-  "description": "A web component for estimating course workload.",
-  "files": [
-    "ui.js"
-  ]
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
 }
