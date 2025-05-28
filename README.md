@@ -1,33 +1,117 @@
-## Enhanced Workload Estimator 
+# Enhanced Workload Estimator
 
-The Enhanced Workload Estimator is a powerful and embeddable JavaScript component designed to help educators, instructional designers, and students estimate the weekly workload for a course. By accounting for various academic activities such as reading, writing, exams, videos, discussions, and class meetings, this tool provides a comprehensive and dynamic way to calculate total hours required per week. 
+The **Enhanced Workload Estimator** is a powerful, embeddable TypeScript + Web Component application built to assist educators, instructional designers, and students in estimating the weekly workload of a course. It accounts for a broad range of academic activities and provides real-time, data-driven insights through an intuitive, customizable interface.
 
-Whether you're planning a new course, evaluating an existing one, or simply curious about the time commitment for different activities, the Enhanced Workload Estimator offers real-time feedback, customizable inputs, and an intuitive interface to make workload estimation simple and accurate.
+---
 
-## Features
-- **Interactive Panels**: Intuitive and interactive panels for entering course details such as reading, writing, exams, videos, and discussions.
-- **Customizable Rates**: Adjust rates based on a variety of factors such as density or format.
-- **Dynamic Calculations**: Automatically updates weekly workload estimates in real-time as inputs are modified.
-- **Encapsulation**: Uses Shadow DOM for styling and encapsulation, ensuring the component does not interfere with other styles on the page.
-- **Flexible Inputs**: Supports a wide range of activities, including:
-  - Reading assignments with customizable page density and difficulty.
-  - Writing assignments with drafting levels and genres.
-  - Exams with study hours and optional take-home exam time limits.
-  - Videos and podcasts with weekly durations.
-  - Discussion posts with formats (text or audio/video) and average lengths.
-  - Class meetings with weekly frequency and duration.
-- **Manual Adjustments**: Allows users to manually override default rates for reading, writing, and discussions.
-- **Real-Time Feedback**: Displays workload estimates dynamically, helping users understand the impact of their inputs immediately.
-- **Embeddable Component**: Easily integrates into any web application with a single `<workload-estimator>` tag.
+## 🔧 Features
 
-## Usage
+- **Modular & Encapsulated**: Built as a custom Web Component using Shadow DOM for complete style isolation.
+- **Vite-Powered**: Fast development and optimized production builds using [Vite](https://vitejs.dev/).
+- **Interactive UI**: Includes panels for:
+  - Reading assignments
+  - Writing tasks
+  - Exams
+  - Videos / Podcasts
+  - Discussion posts
+  - Class meetings
+  - Other assignments
+- **Customizable Rates**: Adjustable parameters for page density, difficulty, writing genre, drafting, and more.
+- **Real-Time Feedback**: Dynamically updates workload estimates as inputs change.
+- **Embeddable Component**: Easily insert into any HTML file with a single `<workload-estimator>` tag.
 
-## Acknowledgments
+---
+
+## 🚀 Getting Started
+
+These instructions will get you a copy of the project up and running in your local environment for development or evaluation purposes.
+
+### 📦 Prerequisites
+
+- [Node.js](https://nodejs.org/) (version 18+ recommended)
+- npm (comes with Node)
+
+### 🛠️ Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/workload-estimator.git
+   cd workload-estimator
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser and visit:
+
+   ```
+   http://localhost:5173
+   ```
+
+---
+
+## 🏗️ Project Structure
+
+```
+workload-estimator/
+├── index.html           # Entry point for the app
+├── public/              # Static files (ui.html, ui.css)
+├── src/                 # TypeScript source files
+│   ├── main.ts          # Main application entry with component registration
+│   ├── calc.ts          # Workload calculation logic
+│   └── workloadEstimator.ts # Core logic for UI behavior
+├── tsconfig.json        # TypeScript config
+├── vite.config.ts       # Vite config
+└── package.json         # Dependencies and scripts
+```
+
+---
+
+## 🧪 Build for Production
+
+To create an optimized, production-ready build:
+
+```bash
+npm run build
+```
+
+Then preview the built app locally:
+
+```bash
+npm run preview
+```
+
+---
+
+## 💡 Usage in Other Projects
+
+To use the workload estimator in another project:
+
+1. Include the compiled script from `dist/`.
+2. Add `<workload-estimator></workload-estimator>` to your HTML.
+
+The component will load its own UI and styles via the Shadow DOM.
+
+---
+
+## 🙏 Acknowledgments
 
 - Inspired by the [Shiny R App](https://shiny.justinesarey.com/wfuworkloadapp/).
-- Reading and writing rates are based on data from [Wake Forest University](https://cat.wfu.edu/resources/workload/estimationdetails/).
+- Reading and writing rates are based on research by [Wake Forest University](https://cat.wfu.edu/resources/workload/estimationdetails/).
 
-## License
+---
+
+## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
