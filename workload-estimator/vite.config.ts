@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite';
+import { viteSingleFile } from 'vite-plugin-singlefile';
 
 export default defineConfig({
-  root: '.', // base dir with index.html
+  base: '/WorkEstimator/',
+  plugins: [viteSingleFile()],
   build: {
-    outDir: 'dist',
-    sourcemap: true,
-  },
-  server: {
-    open: true, // auto-open browser on dev server start
+    target: 'esnext',
+    assetsInlineLimit: Infinity,
+    cssCodeSplit: false,
   }
 });
