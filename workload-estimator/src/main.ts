@@ -77,16 +77,16 @@ initializeElements() {
     discussionHoursPerWeek: this.shadowRoot!.querySelector('#hoursPerWeekInput') || { value: '1' },
     exams: this.shadowRoot!.querySelector('#examsInput') || { value: '0' },
     studyHours: this.shadowRoot!.querySelector('#studyHoursInput') || { value: '5' },
-    takeHomeExams: this.shadowRoot!.querySelector('#takeHomeExamsCheckbox') || { checked: false },
+    takeHomeExams: this.shadowRoot!.querySelector('#takeHomeExamsCheckbox') || {checked: false},
     examTimeLimit: this.shadowRoot!.querySelector('#examTimeLimitInput') || { value: '60' },
     numberPerSemester: this.shadowRoot!.querySelector('#numberPerSemesterInput') || { value: '0' },
     hoursPerAssignment: this.shadowRoot!.querySelector('#hoursPerAssignmentInput') || { value: '0' },
-    independent: this.shadowRoot!.querySelector('#independentCheckbox') || { checked: false },
+    independent: this.shadowRoot!.querySelector('#independentCheckbox') || {checked: false},
     meetingsPerWeek: this.shadowRoot!.querySelector('#meetingsPerWeek') || { value: '0' },
     meetingLength: this.shadowRoot!.querySelector('#meetingLength') || { value: '0' },
-    readingRateCheckbox: this.shadowRoot!.querySelector('#readingRateCheckbox') || { checked: false },
-    writingRateCheckbox: this.shadowRoot!.querySelector('#writingRateCheckbox') || { checked: false },
-    discussionRateCheckbox: this.shadowRoot!.querySelector('#discussionRateCheckbox') || { checked: false },
+    readingRateCheckbox: this.shadowRoot!.querySelector('#readingRateCheckbox') || {checked: false},
+    writingRateCheckbox: this.shadowRoot!.querySelector('#writingRateCheckbox') || {checked: false},
+    discussionRateCheckbox: this.shadowRoot!.querySelector('#discussionRateCheckbox') || {checked: false},
     readingRateContainer: this.shadowRoot!.querySelector('#readingRateContainer') || {},
     writingRateContainer: this.shadowRoot!.querySelector('#writingRateContainer') || {},
     discussionRateContainer: this.shadowRoot!.querySelector('#discussionRateContainer') || {},
@@ -111,8 +111,7 @@ initializeElements() {
       const eventType = input.type === 'checkbox' || input.type === 'radio' ? 'change' : 'input';
       input.addEventListener(eventType, () => {
         const updatedInputValues = this.initializeElements();
-        const workload = calculateWorkload(updatedInputValues);
-        this.updateWorkloadEstimates(workload);
+        this.updateWorkloadEstimates(calculateWorkload(updatedInputValues));
       });
     }
   });

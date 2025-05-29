@@ -31,8 +31,7 @@ const hoursPerWriting = {
     "Extensive Drafting": { "Reflection/Narrative": 2.5, Argument: 5, Research: 10 }
   }
 };
-
-  export function calculateWorkload(inputValues: { classWeeks: any; readingPages: any; pageDensity: any; difficulty: any; purpose: any; pagesPerHour: any; semesterPages: any; pageDensityWriting: any; genre: any; drafting: any; hoursPerPage: any; weeklyVideos: any; discussionPosts: any; discussionFormat: any; avgLength: any; avgLengthMinutes: any; discussionHoursPerWeek: any; exams: any; studyHours: any; takeHomeExams: any; examTimeLimit: any; numberPerSemester: any; hoursPerAssignment: any; independent: any; meetingsPerWeek: any; meetingLength: any; readingRateCheckbox: any; writingRateCheckbox: any; discussionRateCheckbox: any; readingRateContainer?: {}; writingRateContainer?: {}; discussionRateContainer?: {}; takeHomeExamsContainer?: {}; textInputContainer?: {}; audioInputContainer?: {}; sliderValue?: Element | { textContent: string; }; total?: Element | { textContent: string; }; independentDisplay?: Element | { textContent: string; }; contact?: Element | { textContent: string; }; readingRateDisplay?: Element | { textContent: string; }; writingRateDisplay?: Element | { textContent: string; }; hoursPerWeekDiscussionDisplay?: Element | { textContent: string; }; }) {
+  export function calculateWorkload(inputValues: any) {
   const {
     classWeeks,
     readingPages,
@@ -128,7 +127,7 @@ const hoursPerWriting = {
 
   // Exams workload calculation
   let examTime = 0;
-  if (takeHomeExams?.checked) {
+  if (takeHomeExams.checked) {
     examTime = examTimeLimitValue / 60; // Convert minutes to hours
   }
   const examsTime = (examsValue * (studyHoursValue + examTime)) / classWeeksValue;
@@ -142,7 +141,7 @@ const hoursPerWriting = {
   // Independent and Contact workload calculation
   let independentTime = readingTime + writingTime + videoTime + examsTime;
   let contactTime = discussionTime + classMeetingTime;
-  if (independent?.checked) {
+  if (independent.checked) {
     independentTime += otherTime;
   } else {
     contactTime += otherTime;
