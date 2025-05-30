@@ -15,8 +15,6 @@
 /// https://cat.wfu.edu/resources/workload/estimationdetails/
 import { calculateWorkload } from './calc.ts';
 
-
-
 class WorkloadEstimator extends HTMLElement {
   constructor() {
     super();
