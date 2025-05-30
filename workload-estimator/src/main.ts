@@ -25,11 +25,11 @@ class WorkloadEstimator extends HTMLElement {
     // Load the external stylesheet
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('href', '/ui.css');
+    link.setAttribute('href', './ui.css');
     shadow.appendChild(link);
 
     // Fetch and inject HTML UI into shadow DOM
-    fetch('/ui.html')
+    fetch('./ui.html')
       .then((res) => res.text())
       .then((html) => {
         const container = document.createElement('div');

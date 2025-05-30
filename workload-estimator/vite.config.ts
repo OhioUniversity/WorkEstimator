@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 
 export default defineConfig({
-  base: '/WorkEstimator/', // change if your repo is named differently
+  base: '/WorkEstimator/',
   plugins: [viteSingleFile()],
   build: {
     target: 'esnext',
