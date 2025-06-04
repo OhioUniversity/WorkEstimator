@@ -11,7 +11,7 @@ export default defineConfig({
     cssCodeSplit: false,
     rollupOptions: {
       output: {
-        entryFileNames: 'index.html',
+        entryFileNames: 'index.js',
       },
     },
   },
