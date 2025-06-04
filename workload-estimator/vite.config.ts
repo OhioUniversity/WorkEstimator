@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   base: '/WorkEstimator/',
@@ -14,5 +14,10 @@ export default defineConfig({
         entryFileNames: 'index.js',
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom', // Simulates DOM for component testing
+    include: ['src/*.test.ts'],
   },
 });
