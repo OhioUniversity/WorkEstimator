@@ -14,6 +14,8 @@
 /// this data is based on the following sources:
 /// https://cat.wfu.edu/resources/workload/estimationdetails/
 import { calculateWorkload } from './calc.ts';
+import uiHtml from './ui.html?raw';
+import uiCss from './ui.css?raw';
 
 class WorkloadEstimator extends HTMLElement {
   constructor() {
@@ -22,25 +24,19 @@ class WorkloadEstimator extends HTMLElement {
     // Attach a shadow root
     const shadow = this.attachShadow({ mode: 'open' });
 
-    // Load the external stylesheet
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('href', './ui.css');
-    shadow.appendChild(link);
+     // Create a <style> tag with inlined CSS
+    const style = document.createElement('style');
+    style.textContent = uiCss;
+    shadow.appendChild(style);
 
-    // Fetch and inject HTML UI into shadow DOM
-    fetch('./ui.html')
-      .then((res) => res.text())
-      .then((html) => {
-        const container = document.createElement('div');
-        container.innerHTML = html;
-        shadow.appendChild(container);
+    // Inject the inlined HTML
+    const container = document.createElement('div');
+    container.innerHTML = uiHtml;
+    shadow.appendChild(container);
 
-        // Now initialize all interactive logic
-        const inputValues = this.initializeElements();
-        this.initializeEventListeners(inputValues);
-      })
-      .catch((error) => console.error('Error loading UI content:', error));
+    // Now initialize all interactive logic
+    const inputValues = this.initializeElements();
+    this.initializeEventListeners(inputValues);
 
   }
 
