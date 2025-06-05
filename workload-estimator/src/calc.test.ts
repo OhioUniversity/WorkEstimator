@@ -1,37 +1,37 @@
 import { calculateWorkload } from './calc';
 
 test('calculates workload for no assignments', () => {
-  const inputValues = {
-    classWeeks: { value: '15' },
-    readingPages: { value: '0' },
-    pageDensity: { value: '450 Words' },
-    difficulty: { value: 'No New Concepts' },
-    purpose: { value: 'Survey' },
-    pagesPerHour: { value: '20' },
-    semesterPages: { value: '0' },
-    pageDensityWriting: { value: '250 Words' },
-    genre: { value: 'Reflection/Narrative' },
-    drafting: { value: 'No Drafting' },
-    hoursPerPage: { value: '1' },
-    weeklyVideos: { value: '0' },
-    discussionPosts: { value: '0' },
-    discussionFormat: { value: 'Text' },
-    avgLength: { value: '250' },
-    avgLengthMinutes: { value: '3' },
-    discussionHoursPerWeek: { value: '0' },
-    exams: { value: '0' },
-    studyHours: { value: '0' },
-    takeHomeExams: { checked: false },
-    examTimeLimit: { value: '60' },
-    numberPerSemester: { value: '0' },
-    hoursPerAssignment: { value: '0' },
-    meetingsPerWeek: { value: '0' },
-    meetingLength: { value: '0' },
-    readingRateCheckbox: { checked: false },
-    writingRateCheckbox: { checked: false },
-    discussionRateCheckbox: { checked: false },
-    independent: { checked: false }
-  };
+  const inputValues = wrapInputs({
+    classWeeks: 15,
+    readingPages: 0,
+    pageDensity: '450 Words',
+    difficulty: 'No New Concepts',
+    purpose: 'Survey',
+    pagesPerHour: 20,
+    semesterPages: 0,
+    pageDensityWriting: '250 Words',
+    genre: 'Reflection/Narrative',
+    drafting: 'No Drafting',
+    hoursPerPage: 1,
+    weeklyVideos: 0,
+    discussionPosts: 0,
+    discussionFormat: 'Text',
+    avgLength: 250,
+    avgLengthMinutes: 3,
+    discussionHoursPerWeek: 0,
+    exams: 0,
+    studyHours: 0,
+    takeHomeExams: false,
+    examTimeLimit: 60,
+    numberPerSemester: 0,
+    hoursPerAssignment: 0,
+    meetingsPerWeek: 0,
+    meetingLength: 0,
+    readingRateCheckbox: false,
+    writingRateCheckbox: false,
+    discussionRateCheckbox: false,
+    independent: false
+  });
 
   const expectedOutput = {
     total: 0,
@@ -42,49 +42,42 @@ test('calculates workload for no assignments', () => {
     discussionTime: 0,
   };
 
-  const actual = calculateWorkload(inputValues);
-  const output = actual.workload;
-
-  expect(output.total).toBeCloseTo(expectedOutput.total, 0.01);
-  expect(output.independentTime).toBeCloseTo(expectedOutput.independentTime, 0.01);
-  expect(output.contactTime).toBeCloseTo(expectedOutput.contactTime, 0.01);
-  expect(output.readingRate).toBeCloseTo(expectedOutput.readingRate, 0.01);
-  expect(output.writingRate).toBeCloseTo(expectedOutput.writingRate, 0.01);
-  expect(output.discussionTime).toBeCloseTo(expectedOutput.discussionTime, 0.01);
+  const output = calculateWorkload(inputValues).workload;
+  compareWorkload(output, expectedOutput);
 });
 
 test('calculates workload with no manual overrides or checkboxes checked', () => {
-  const inputValues = {
-    classWeeks: { value: '15' },
-    readingPages: { value: '30' },
-    pageDensity: { value: '450 Words' },
-    difficulty: { value: 'Some New Concepts' },
-    purpose: { value: 'Understand' },
-    pagesPerHour: { value: '20' },
-    semesterPages: { value: '10' },
-    pageDensityWriting: { value: '250 Words' },
-    genre: { value: 'Argument' },
-    drafting: { value: 'Minimal Drafting' },
-    hoursPerPage: { value: '1' },
-    weeklyVideos: { value: '2' },
-    discussionPosts: { value: '1' },
-    discussionFormat: { value: 'Text' },
-    avgLength: { value: '250' },
-    avgLengthMinutes: { value: '3' },
-    discussionHoursPerWeek: { value: '0.5' },
-    exams: { value: '2' },
-    studyHours: { value: '5' },
-    takeHomeExams: { checked: false },
-    examTimeLimit: { value: '60' },
-    numberPerSemester: { value: '1' },
-    hoursPerAssignment: { value: '2' },
-    meetingsPerWeek: { value: '1' },
-    meetingLength: { value: '1' },
-    readingRateCheckbox: { checked: false },
-    writingRateCheckbox: { checked: false },
-    discussionRateCheckbox: { checked: false },
-    independent: { checked: false }
-  };
+  const inputValues = wrapInputs({
+    classWeeks: 15,
+    readingPages: 30,
+    pageDensity: '450 Words',
+    difficulty: 'Some New Concepts',
+    purpose: 'Understand',
+    pagesPerHour: 20,
+    semesterPages: 10,
+    pageDensityWriting: '250 Words',
+    genre: 'Argument',
+    drafting: 'Minimal Drafting',
+    hoursPerPage: 1,
+    weeklyVideos: 2,
+    discussionPosts: 1,
+    discussionFormat: 'Text',
+    avgLength: 250,
+    avgLengthMinutes: 3,
+    discussionHoursPerWeek: 0.5,
+    exams: 2,
+    studyHours: 5,
+    takeHomeExams: false,
+    examTimeLimit: 60,
+    numberPerSemester: 1,
+    hoursPerAssignment: 2,
+    meetingsPerWeek: 1,
+    meetingLength: 1,
+    readingRateCheckbox: false,
+    writingRateCheckbox: false,
+    discussionRateCheckbox: false,
+    independent: false
+  });
   const expectedOutput = {
     total: 7.38,
     independentTime: 5.25,
@@ -93,49 +86,42 @@ test('calculates workload with no manual overrides or checkboxes checked', () =>
     writingRate: 2,
     discussionTime: 1,
   };
-  const actual = calculateWorkload(inputValues);
-  const output = actual.workload;
-
-  expect(output.total).toBeCloseTo(expectedOutput.total, 0.01);
-  expect(output.independentTime).toBeCloseTo(expectedOutput.independentTime, 0.01);
-  expect(output.contactTime).toBeCloseTo(expectedOutput.contactTime, 0.01);
-  expect(output.readingRate).toBeCloseTo(expectedOutput.readingRate, 0.01);
-  expect(output.writingRate).toBeCloseTo(expectedOutput.writingRate, 0.01);
-  expect(output.discussionTime).toBeCloseTo(expectedOutput.discussionTime, 0.01);
+  const output = calculateWorkload(inputValues).workload;
+  compareWorkload(output, expectedOutput);
 });
 
 test('calculates workload with some checkboxes checked', () => {
-  const inputValues = {
-    classWeeks: { value: '10' },
-    readingPages: { value: '20' },
-    pageDensity: { value: '600 Words' },
-    difficulty: { value: 'Many New Concepts' },
-    purpose: { value: 'Engage' },
-    pagesPerHour: { value: '15' },
-    semesterPages: { value: '25' },
-    pageDensityWriting: { value: '500 Words' },
-    genre: { value: 'Research' },
-    drafting: { value: 'Extensive Drafting' },
-    hoursPerPage: { value: '2' },
-    weeklyVideos: { value: '1' },
-    discussionPosts: { value: '2' },
-    discussionFormat: { value: 'Audio/Video' },
-    avgLength: { value: '0' },
-    avgLengthMinutes: { value: '10' },
-    discussionHoursPerWeek: { value: '1' },
-    exams: { value: '1' },
-    studyHours: { value: '8' },
-    takeHomeExams: { checked: true },
-    examTimeLimit: { value: '120' },
-    numberPerSemester: { value: '2' },
-    hoursPerAssignment: { value: '3' },
-    meetingsPerWeek: { value: '2' },
-    meetingLength: { value: '1.5' },
-    readingRateCheckbox: { checked: true },
-    writingRateCheckbox: { checked: false },
-    discussionRateCheckbox: { checked: true },
-    independent: { checked: true }
-  };
+  const inputValues = wrapInputs({
+    classWeeks: 10,
+    readingPages: 20,
+    pageDensity: '600 Words',
+    difficulty: 'Many New Concepts',
+    purpose: 'Engage',
+    pagesPerHour: 15,
+    semesterPages: 25,
+    pageDensityWriting: '500 Words',
+    genre: 'Research',
+    drafting: 'Extensive Drafting',
+    hoursPerPage: 2,
+    weeklyVideos: 1,
+    discussionPosts: 2,
+    discussionFormat: 'Audio/Video',
+    avgLength: 0,
+    avgLengthMinutes: 10,
+    discussionHoursPerWeek: 1,
+    exams: 1,
+    studyHours: 8,
+    takeHomeExams: true,
+    examTimeLimit: 120,
+    numberPerSemester: 2,
+    hoursPerAssignment: 3,
+    meetingsPerWeek: 2,
+    meetingLength: 1.5,
+    readingRateCheckbox: true,
+    writingRateCheckbox: false,
+    discussionRateCheckbox: true,
+    independent: true
+  });
 
   const expectedOutput = {
     total: 32.93,
@@ -146,49 +132,42 @@ test('calculates workload with some checkboxes checked', () => {
     discussionTime: 1,
   };
 
-  const actual = calculateWorkload(inputValues);
-  const output = actual.workload;
-
-  expect(output.total).toBeCloseTo(expectedOutput.total, 0.01);
-  expect(output.independentTime).toBeCloseTo(expectedOutput.independentTime, 0.01);
-  expect(output.contactTime).toBeCloseTo(expectedOutput.contactTime, 0.01);
-  expect(output.readingRate).toBeCloseTo(expectedOutput.readingRate, 0.01);
-  expect(output.writingRate).toBeCloseTo(expectedOutput.writingRate, 0.01);
-  expect(output.discussionTime).toBeCloseTo(expectedOutput.discussionTime, 0.01);
+  const output = calculateWorkload(inputValues).workload;
+  compareWorkload(output, expectedOutput);
 });
 
 test('calculates workload with all checkboxes checked', () => {
-  const inputValues = {
-    classWeeks: { value: '8' },
-    readingPages: { value: '40' },
-    pageDensity: { value: '750 Words' },
-    difficulty: { value: 'Many New Concepts' },
-    purpose: { value: 'Engage' },
-    pagesPerHour: { value: '10' },
-    semesterPages: { value: '60' },
-    pageDensityWriting: { value: '500 Words' },
-    genre: { value: 'Research' },
-    drafting: { value: 'Extensive Drafting' },
-    hoursPerPage: { value: '4' },
-    weeklyVideos: { value: '3' },
-    discussionPosts: { value: '3' },
-    discussionFormat: { value: 'Audio/Video' },
-    avgLength: { value: '0' },
-    avgLengthMinutes: { value: '15' },
-    discussionHoursPerWeek: { value: '2' },
-    exams: { value: '2' },
-    studyHours: { value: '12' },
-    takeHomeExams: { checked: true },
-    examTimeLimit: { value: '180' },
-    numberPerSemester: { value: '4' },
-    hoursPerAssignment: { value: '6' },
-    meetingsPerWeek: { value: '4' },
-    meetingLength: { value: '2' },
-    readingRateCheckbox: { checked: true },
-    writingRateCheckbox: { checked: true },
-    discussionRateCheckbox: { checked: true },
-    independent: { checked: true }
-  };
+  const inputValues = wrapInputs({
+    classWeeks: 8,
+    readingPages: 40,
+    pageDensity: '750 Words',
+    difficulty: 'Many New Concepts',
+    purpose: 'Engage',
+    pagesPerHour: 10,
+    semesterPages: 60,
+    pageDensityWriting: '500 Words',
+    genre: 'Research',
+    drafting: 'Extensive Drafting',
+    hoursPerPage: 4,
+    weeklyVideos: 3,
+    discussionPosts: 3,
+    discussionFormat: 'Audio/Video',
+    avgLength: 0,
+    avgLengthMinutes: 15,
+    discussionHoursPerWeek: 2,
+    exams: 2,
+    studyHours: 12,
+    takeHomeExams: true,
+    examTimeLimit: 180,
+    numberPerSemester: 4,
+    hoursPerAssignment: 6,
+    meetingsPerWeek: 4,
+    meetingLength: 2,
+    readingRateCheckbox: true,
+    writingRateCheckbox: true,
+    discussionRateCheckbox: true,
+    independent: true
+  });
 
   const expectedOutput = {
     total: 53.75,
@@ -199,13 +178,32 @@ test('calculates workload with all checkboxes checked', () => {
     discussionTime: 2,
   };
 
-  const actual = calculateWorkload(inputValues);
-  const output = actual.workload;
-
-  expect(output.total).toBeCloseTo(expectedOutput.total, 0.01);
-  expect(output.independentTime).toBeCloseTo(expectedOutput.independentTime, 0.01);
-  expect(output.contactTime).toBeCloseTo(expectedOutput.contactTime, 0.01);
-  expect(output.readingRate).toBeCloseTo(expectedOutput.readingRate, 0.01);
-  expect(output.writingRate).toBeCloseTo(expectedOutput.writingRate, 0.01);
-  expect(output.discussionTime).toBeCloseTo(expectedOutput.discussionTime, 0.01);
+  const output = calculateWorkload(inputValues).workload;
+  compareWorkload(output, expectedOutput);
 });
+
+function compareWorkload(output: any, expected: any) {
+  expect(output.total).toBeCloseTo(expected.total, 0.01);
+  expect(output.independentTime).toBeCloseTo(expected.independentTime, 0.01);
+  expect(output.contactTime).toBeCloseTo(expected.contactTime, 0.01);
+  expect(output.readingRate).toBeCloseTo(expected.readingRate, 0.01);
+  expect(output.writingRate).toBeCloseTo(expected.writingRate, 0.01);
+  expect(output.discussionTime).toBeCloseTo(expected.discussionTime, 0.01);
+}
+
+function wrapInputs(inputs: Record<string, any>) {
+  const wrapped: Record<string, any> = {};
+  for (const key in inputs) {
+    // If the key is a checkbox, wrap as { checked: ... }
+    if (
+      key.endsWith('Checkbox') ||
+      key === 'takeHomeExams' ||
+      key === 'independent'
+    ) {
+      wrapped[key] = { checked: Boolean(inputs[key]) };
+    } else {
+      wrapped[key] = { value: String(inputs[key]) };
+    }
+  }
+  return wrapped;
+}

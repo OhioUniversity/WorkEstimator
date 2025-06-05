@@ -64,22 +64,22 @@ const hoursPerWriting = {
     independent
   } = inputValues;
 
-  // Parse values with defaults
-  const classWeeksValue = parseInt(classWeeks?.value || '15');
-  const readingPagesValue = parseInt(readingPages?.value || '0');
-  const semesterPagesValue = parseFloat(semesterPages?.value || '0');
-  const weeklyVideosValue = parseFloat(weeklyVideos?.value || '0');
-  const discussionPostsPerWeek = parseFloat(discussionPosts?.value || '0');
-  const avgLengthValue = parseFloat(avgLength?.value || '250');
-  const avgLengthMinutesValue = parseFloat(avgLengthMinutes?.value || '0');
-  const discussionHoursPerWeekValue = parseFloat(discussionHoursPerWeek?.value || '0');
-  const examsValue = parseFloat(exams?.value || '0');
-  const studyHoursValue = parseFloat(studyHours?.value || '0');
-  const examTimeLimitValue = parseFloat(examTimeLimit?.value || '0');
-  const numberPerSemesterValue = parseFloat(numberPerSemester?.value || '0');
-  const hoursPerAssignmentValue = parseFloat(hoursPerAssignment?.value || '0');
-  const meetingsPerWeekValue = parseFloat(meetingsPerWeek?.value || '0');
-  const meetingLengthValue = parseFloat(meetingLength?.value || '0');
+  // Parse values with defaults and use absolute value
+  const classWeeksValue = Math.abs(parseInt(classWeeks?.value || '15'));
+  const readingPagesValue = Math.abs(parseInt(readingPages?.value || '0'));
+  const semesterPagesValue = Math.abs(parseFloat(semesterPages?.value || '0'));
+  const weeklyVideosValue = Math.abs(parseFloat(weeklyVideos?.value || '0'));
+  const discussionPostsPerWeek = Math.abs(parseFloat(discussionPosts?.value || '0'));
+  const avgLengthValue = Math.abs(parseFloat(avgLength?.value || '250'));
+  const avgLengthMinutesValue = Math.abs(parseFloat(avgLengthMinutes?.value || '0'));
+  const discussionHoursPerWeekValue = Math.abs(parseFloat(discussionHoursPerWeek?.value || '0'));
+  const examsValue = Math.abs(parseFloat(exams?.value || '0'));
+  const studyHoursValue = Math.abs(parseFloat(studyHours?.value || '0'));
+  const examTimeLimitValue = Math.abs(parseFloat(examTimeLimit?.value || '0'));
+  const numberPerSemesterValue = Math.abs(parseFloat(numberPerSemester?.value || '0'));
+  const hoursPerAssignmentValue = Math.abs(parseFloat(hoursPerAssignment?.value || '0'));
+  const meetingsPerWeekValue = Math.abs(parseFloat(meetingsPerWeek?.value || '0'));
+  const meetingLengthValue = Math.abs(parseFloat(meetingLength?.value || '0'));
 
   // Reading workload calculation
   let readingRate;
