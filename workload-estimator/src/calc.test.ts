@@ -182,6 +182,98 @@ test('calculates workload with all checkboxes checked', () => {
   compareWorkload(output, expectedOutput);
 });
 
+test('calculates workload with negative values (should be treated as zero)', () => {
+  const inputValues = wrapInputs({
+    classWeeks: -10,
+    readingPages: -50,
+    pageDensity: '450 Words',
+    difficulty: 'No New Concepts',
+    purpose: 'Survey',
+    pagesPerHour: -5,
+    semesterPages: -20,
+    pageDensityWriting: '250 Words',
+    genre: 'Reflection/Narrative',
+    drafting: 'No Drafting',
+    hoursPerPage: -1,
+    weeklyVideos: -2,
+    discussionPosts: -1,
+    discussionFormat: 'Text',
+    avgLength: -250,
+    avgLengthMinutes: -3,
+    discussionHoursPerWeek: -1,
+    exams: -2,
+    studyHours: -5,
+    takeHomeExams: false,
+    examTimeLimit: -60,
+    numberPerSemester: 1,
+    hoursPerAssignment: -2,
+    meetingsPerWeek: -1,
+    meetingLength: -1,
+    readingRateCheckbox: false,
+    writingRateCheckbox: false,
+    discussionRateCheckbox: false,
+    independent: false
+  });
+
+  const expectedOutput = {
+    total: 7.45,
+    independentTime: 5.25,
+    contactTime: 2.2,
+    readingRate: 67,
+    writingRate: 0.75,
+    discussionTime: 1,
+  };
+
+  const output = calculateWorkload(inputValues).workload;
+  compareWorkload(output, expectedOutput);
+});
+
+test('calculates workload with missing fields', () => {
+  const inputValues = wrapInputs({
+    classWeeks: 16,
+    readingPages: 100,
+    pageDensity: '600 Words',
+    difficulty: 'Some New Concepts',
+    purpose: 'Understand',
+    pagesPerHour: 25,
+    semesterPages: 0,
+    pageDensityWriting: '250 Words',
+    genre: 'Argument',
+    drafting: 'Minimal Drafting',
+    hoursPerPage: 2,
+    // weeklyVideos missing
+    discussionPosts: 0,
+    discussionFormat: 'Text',
+    avgLength: 250,
+    avgLengthMinutes: 3,
+    discussionHoursPerWeek: 0,
+    exams: 0,
+    studyHours: 0,
+    takeHomeExams: false,
+    examTimeLimit: 60,
+    numberPerSemester: 0,
+    hoursPerAssignment: 0,
+    meetingsPerWeek: 0,
+    meetingLength: 0,
+    readingRateCheckbox: false,
+    writingRateCheckbox: false,
+    discussionRateCheckbox: false,
+    independent: false
+  });
+
+  const expectedOutput = {
+    total: 5.56,
+    independentTime: 5.56,
+    contactTime: 0,
+    readingRate: 18,
+    writingRate: 2,
+    discussionTime: 0,
+  };
+
+  const output = calculateWorkload(inputValues).workload;
+  compareWorkload(output, expectedOutput);
+});
+
 function compareWorkload(output: any, expected: any) {
   expect(output.total).toBeCloseTo(expected.total, 0.01);
   expect(output.independentTime).toBeCloseTo(expected.independentTime, 0.01);
