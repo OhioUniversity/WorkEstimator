@@ -36,7 +36,7 @@ These instructions will get you a copy of the project up and running in your loc
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/workload-estimator.git
+   git clone https://github.com/OhioUniversity/WorkEstimator.git
    cd workload-estimator
    ```
 
@@ -65,11 +65,12 @@ These instructions will get you a copy of the project up and running in your loc
 ```
 workload-estimator/
 ├── index.html           # Entry point for the app
-├── public/              # Static files (ui.html, ui.css)
-├── src/                 # TypeScript source files
+├── src/                 # TypeScript and UI source files
 │   ├── main.ts          # Main application entry with component registration
 │   ├── calc.ts          # Workload calculation logic
-│   └── workloadEstimator.ts # Core logic for UI behavior
+│   ├── ui.html          # HTML template for the UI
+│   ├── ui.css           # CSS styles for the UI
+│   └── calc.test.ts     # Unit tests for calculation logic
 ├── tsconfig.json        # TypeScript config
 ├── vite.config.ts       # Vite config
 └── package.json         # Dependencies and scripts
@@ -113,7 +114,7 @@ The component will load its own UI and styles via the Shadow DOM.
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](./LICENSE) file for details.
 
 
 
