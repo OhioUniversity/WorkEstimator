@@ -93,6 +93,18 @@ npm run preview
 ```
 
 ---
+## How to Add Custom Styles
+1. Create a user.css file
+   - In the same directory as index.html, create a file named user.css.
+
+2. Write your CSS
+   - You can target host-level styles or shadow DOM elements.
+
+3. Add this line to index.html right above type="module"
+   - \<link rel="stylesheet" href="user.css" data-user-css />
+
+3. Deploy or serve your project
+   - Ensure user.css is present when the project is hosted or served locally.
 
 ## 💡 Usage in Other Projects
 

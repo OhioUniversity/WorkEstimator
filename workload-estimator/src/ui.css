@@ -13,6 +13,22 @@
   margin: 0 auto;
   padding: 1rem;
 }
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.column {
+  flex: 1 1 calc(25% - 1rem);
+  min-width: 250px;
+}
+
+@media (max-width: 900px) {
+  .column {
+    flex: 1 1 100%;
+  }
+}
 
 h3, h4, p {
   text-align: center;
@@ -30,11 +46,6 @@ h4 {
   color: #333;
 }
 
-.grid {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(4, 1fr);
-}
 
 .panel {
   background: #ffffff;
