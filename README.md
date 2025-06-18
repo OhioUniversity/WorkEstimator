@@ -100,11 +100,23 @@ npm run preview
 2. Write your CSS
    - You can target host-level styles or shadow DOM elements.
 
-3. Add this line to index.html right above type="module"
-   - \<link rel="stylesheet" href="user.css" data-user-css />
-
 3. Deploy or serve your project
    - Ensure user.css is present when the project is hosted or served locally.
+
+---
+## How to Embed into an Iframe
+1. Into the html file insert the iframe with the src link to where the component is deployed
+   - EX:
+         \<iframe \
+            src="https://ohiouniversity.github.io/WorkEstimator/" \
+            width="100%" \
+            height="800" \
+            style="border: none;" \
+            title="Course Workload Estimator" \
+            loading="lazy" \
+            allowfullscreen \
+         \>\</iframe>
+2. Style as you please
 
 ## 💡 Usage in Other Projects
 
