@@ -34,19 +34,16 @@ class WorkloadEstimator extends HTMLElement {
     shadow.appendChild(container);
 
     // Now initialize all interactive logic
-    const inputValues = this.initializeElements();
-    this.initializeEventListeners(inputValues);
+    this.initializeEventListeners(this.initializeElements());
 
   }
 
 connectedCallback() {
-  const inputValues = this.initializeElements();
-        
+  const inputValues = this.initializeElements();   
   this.initializeEventListeners(inputValues);
-  const workload = calculateWorkload(inputValues);
 
   // Update the UI with the initial workload estimates
-  this.updateWorkloadEstimates(workload);
+  this.updateWorkloadEstimates(calculateWorkload(this.getInputValues()));
 }
 
 initializeElements() {
@@ -80,22 +77,46 @@ initializeElements() {
     readingRateCheckbox: this.shadowRoot!.querySelector('#readingRateCheckbox') || {checked: false},
     writingRateCheckbox: this.shadowRoot!.querySelector('#writingRateCheckbox') || {checked: false},
     discussionRateCheckbox: this.shadowRoot!.querySelector('#discussionRateCheckbox') || {checked: false},
-    readingRateContainer: this.shadowRoot!.querySelector('#readingRateContainer') || {},
-    writingRateContainer: this.shadowRoot!.querySelector('#writingRateContainer') || {},
-    discussionRateContainer: this.shadowRoot!.querySelector('#discussionRateContainer') || {},
-    takeHomeExamsContainer: this.shadowRoot!.querySelector('#takeHomeExamsContainer') || {},
-    textInputContainer: this.shadowRoot!.querySelector('#textInputContainer') || {},
-    audioInputContainer: this.shadowRoot!.querySelector('#audioInputContainer') || {},
     sliderValue: this.shadowRoot!.querySelector('#sliderValue') || { textContent: '0' },
-    total: this.shadowRoot!.querySelector('#total') || { textContent: '0.00 hours/week' },
-    independentDisplay: this.shadowRoot!.querySelector('#independent') || { textContent: '0.00 hours/week' },
-    contact: this.shadowRoot!.querySelector('#contact') || { textContent: '0.00 hours/week' },
-    readingRateDisplay: this.shadowRoot!.querySelector('#readingRateDisplay') || { textContent: '67 pages per hour' },
-    writingRateDisplay: this.shadowRoot!.querySelector('#writingRateDisplay') || { textContent: '0.75 hours per page' },
-    hoursPerWeekDiscussionDisplay: this.shadowRoot!.querySelector('#hoursPerWeekDiscussionDisplay') || { textContent: '0.00 hours/week' },
   };
   return elements;
 }
+
+ getInputValues() {
+  const inputValues = {
+    classWeeks: Number((this.shadowRoot!.querySelector('#classWeeks') as HTMLInputElement)?.value || 15),
+    readingPages: Number((this.shadowRoot!.querySelector('#weeklyPagesInput') as HTMLInputElement)?.value || 0),
+    pageDensity: (this.shadowRoot!.querySelector('#pageDensitySelect') as HTMLSelectElement).value || '450 Words',
+    difficulty: (this.shadowRoot!.querySelector('#difficultySelect') as HTMLSelectElement).value || 'No New Concepts',
+    purpose: (this.shadowRoot!.querySelector('#purposeSelect') as HTMLSelectElement).value || 'Survey',
+    pagesPerHour: Number((this.shadowRoot!.querySelector('#pagesPerHourInput') as HTMLInputElement)?.value || 10),
+    semesterPages: Number((this.shadowRoot!.querySelector('#semesterPagesInput') as HTMLInputElement)?.value || 0),
+    pageDensityWriting: (this.shadowRoot!.querySelector('#pageDensityWritingSelect') as HTMLSelectElement).value || '250 Words',
+    genre: (this.shadowRoot!.querySelector('#genreSelect') as HTMLSelectElement).value || 'Reflection/Narrative',
+    drafting: (this.shadowRoot!.querySelector('#draftingSelect') as HTMLSelectElement).value || 'No Drafting',
+    hoursPerPage: Number((this.shadowRoot!.querySelector('#hoursPerPageInput') as HTMLInputElement)?.value || 0.5),
+    weeklyVideos: Number((this.shadowRoot!.querySelector('#weeklyVideosInput') as HTMLInputElement)?.value || 0),
+    discussionPosts: Number((this.shadowRoot!.querySelector('#discussionPostsInput') as HTMLInputElement)?.value || 0),
+    discussionFormat: (this.shadowRoot!.querySelector('#discussionFormatSelect') as HTMLSelectElement).value || 'Text',
+    avgLength: Number((this.shadowRoot!.querySelector('#avgLengthInput') as HTMLInputElement)?.value || 250),
+    avgLengthMinutes: Number((this.shadowRoot!.querySelector('#avgLengthMinutesInput') as HTMLInputElement)?.value || 3),
+    discussionHoursPerWeek: Number((this.shadowRoot!.querySelector('#hoursPerWeekInput') as HTMLInputElement)?.value || 1),
+    exams: Number((this.shadowRoot!.querySelector('#examsInput') as HTMLInputElement)?.value || 0),
+    studyHours: Number((this.shadowRoot!.querySelector('#studyHoursInput') as HTMLInputElement)?.value || 5),
+    takeHomeExams: (this.shadowRoot!.querySelector('#takeHomeExamsCheckbox') as HTMLInputElement).checked || false,
+    examTimeLimit: Number((this.shadowRoot!.querySelector('#examTimeLimitInput') as HTMLInputElement)?.value || 60),
+    numberPerSemester: Number((this.shadowRoot!.querySelector('#numberPerSemesterInput') as HTMLInputElement)?.value || 0),
+    hoursPerAssignment: Number((this.shadowRoot!.querySelector('#hoursPerAssignmentInput') as HTMLInputElement)?.value || 0),
+    independent: (this.shadowRoot!.querySelector('#independentCheckbox') as HTMLInputElement).checked || false,
+    meetingsPerWeek: Number((this.shadowRoot!.querySelector('#meetingsPerWeek') as HTMLInputElement)?.value || 0),
+    meetingLength: Number((this.shadowRoot!.querySelector('#meetingLength') as HTMLInputElement)?.value || 0),
+    readingRateCheckbox: (this.shadowRoot!.querySelector('#readingRateCheckbox') as HTMLInputElement).checked || false,
+    writingRateCheckbox: (this.shadowRoot!.querySelector('#writingRateCheckbox') as HTMLInputElement).checked || false,
+    discussionRateCheckbox: (this.shadowRoot!.querySelector('#discussionRateCheckbox') as HTMLInputElement).checked || false, 
+  };
+  return inputValues;
+
+ }
   
  initializeEventListeners(inputValues: Record<string, any>): void {
   // Attach event listeners to all input elements in inputValues
@@ -103,8 +124,7 @@ initializeElements() {
     if (input && (input.tagName === 'INPUT' || input.tagName === 'SELECT')) {
       const eventType = input.type === 'checkbox' || input.type === 'radio' ? 'change' : 'input';
       input.addEventListener(eventType, () => {
-        const updatedInputValues = this.initializeElements();
-        this.updateWorkloadEstimates(calculateWorkload(updatedInputValues));
+        this.updateWorkloadEstimates(calculateWorkload(this.getInputValues()));
       });
     }
   });

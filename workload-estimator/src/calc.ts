@@ -1,6 +1,5 @@
 /// Calculates the total weekly workload based on user inputs.
 /// - Computes independent and contact hours for activities like reading, writing, discussions, exams, and class meetings.
-/// - Updates the workload estimates and rates dynamically in the UI.
 const pagesPerHourData = {
   "No New Concepts": {
     Survey: { "450 Words": 67, "600 Words": 50, "750 Words": 40 },
@@ -31,65 +30,65 @@ const hoursPerWriting = {
     "Extensive Drafting": { "Reflection/Narrative": 2.5, Argument: 5, Research: 10 }
   }
 };
-  export function calculateWorkload(inputValues: any) {
-  const {
-    classWeeks,
-    readingPages,
-    pageDensity,
-    difficulty,
-    purpose,
-    pagesPerHour,
-    semesterPages,
-    pageDensityWriting,
-    genre,
-    drafting,
-    hoursPerPage,
-    weeklyVideos,
-    discussionPosts,
-    discussionFormat,
-    avgLength,
-    avgLengthMinutes,
-    discussionHoursPerWeek,
-    exams,
-    studyHours,
-    takeHomeExams,
-    examTimeLimit,
-    numberPerSemester,
-    hoursPerAssignment,
-    meetingsPerWeek,
-    meetingLength,
-    readingRateCheckbox,
-    writingRateCheckbox,
-    discussionRateCheckbox,
-    independent
-  } = inputValues;
 
-  // Parse values with defaults and use absolute value
-  const classWeeksValue = Math.abs(parseInt(classWeeks?.value || '15'));
-  const readingPagesValue = Math.abs(parseInt(readingPages?.value || '0'));
-  const semesterPagesValue = Math.abs(parseFloat(semesterPages?.value || '0'));
-  const weeklyVideosValue = Math.abs(parseFloat(weeklyVideos?.value || '0'));
-  const discussionPostsPerWeek = Math.abs(parseFloat(discussionPosts?.value || '0'));
-  const avgLengthValue = Math.abs(parseFloat(avgLength?.value || '250'));
-  const avgLengthMinutesValue = Math.abs(parseFloat(avgLengthMinutes?.value || '0'));
-  const discussionHoursPerWeekValue = Math.abs(parseFloat(discussionHoursPerWeek?.value || '0'));
-  const examsValue = Math.abs(parseFloat(exams?.value || '0'));
-  const studyHoursValue = Math.abs(parseFloat(studyHours?.value || '0'));
-  const examTimeLimitValue = Math.abs(parseFloat(examTimeLimit?.value || '0'));
-  const numberPerSemesterValue = Math.abs(parseFloat(numberPerSemester?.value || '0'));
-  const hoursPerAssignmentValue = Math.abs(parseFloat(hoursPerAssignment?.value || '0'));
-  const meetingsPerWeekValue = Math.abs(parseFloat(meetingsPerWeek?.value || '0'));
-  const meetingLengthValue = Math.abs(parseFloat(meetingLength?.value || '0'));
+export interface InputValues {
+  classWeeks: number;
+  readingPages: number;
+  pageDensity: string;
+  difficulty: string;
+  purpose: string;
+  pagesPerHour: number;
+  semesterPages: number;
+  pageDensityWriting: string;
+  genre: string;
+  drafting: string;
+  hoursPerPage: number;
+  weeklyVideos: number;
+  discussionPosts: number;
+  discussionFormat: string;
+  avgLength: number;
+  avgLengthMinutes: number;
+  discussionHoursPerWeek: number;
+  exams: number;
+  studyHours: number;
+  takeHomeExams: boolean;
+  examTimeLimit: number;
+  numberPerSemester: number;
+  hoursPerAssignment: number;
+  meetingsPerWeek: number;
+  meetingLength: number;
+  readingRateCheckbox: boolean;
+  writingRateCheckbox: boolean;
+  discussionRateCheckbox: boolean;
+  independent: boolean;
+}
+
+export function calculateWorkload(inputValues: InputValues) {
+  const classWeeksValue = Math.abs(inputValues.classWeeks);
+  const readingPagesValue = Math.abs(inputValues.readingPages);
+  const semesterPagesValue = Math.abs(inputValues.semesterPages);
+  const weeklyVideosValue = Math.abs(inputValues.weeklyVideos);
+  const discussionPostsPerWeek = Math.abs(inputValues.discussionPosts);
+  const avgLengthValue = Math.abs(inputValues.avgLength);
+  const avgLengthMinutesValue = Math.abs(inputValues.avgLengthMinutes);
+  const discussionHoursPerWeekValue = Math.abs(inputValues.discussionHoursPerWeek);
+  const examsValue = Math.abs(inputValues.exams);
+  const studyHoursValue = Math.abs(inputValues.studyHours);
+  const examTimeLimitValue = Math.abs(inputValues.examTimeLimit);
+  const numberPerSemesterValue = Math.abs(inputValues.numberPerSemester);
+  const hoursPerAssignmentValue = Math.abs(inputValues.hoursPerAssignment);
+  const meetingsPerWeekValue = Math.abs(inputValues.meetingsPerWeek);
+  const meetingLengthValue = Math.abs(inputValues.meetingLength);
 
   // Reading workload calculation
   let readingRate;
-  if (!readingRateCheckbox.checked) {
-    const difficultyValue = (difficulty?.value || 'No New Concepts') as keyof typeof pagesPerHourData;
-    const purposeValue = (purpose?.value || 'Survey') as keyof typeof pagesPerHourData["No New Concepts"];
-    const pageDensityValue = (pageDensity?.value || '450 Words') as keyof typeof pagesPerHourData["No New Concepts"]["Survey"];
+  if (!inputValues.readingRateCheckbox) {
+    const difficultyValue = (inputValues.difficulty || 'No New Concepts') as keyof typeof pagesPerHourData;
+    const purposeValue = (inputValues.purpose || 'Survey') as keyof typeof pagesPerHourData["No New Concepts"];
+    const pageDensityValue = (inputValues.pageDensity || '450 Words') as keyof typeof pagesPerHourData["No New Concepts"]["Survey"];
     readingRate = pagesPerHourData[difficultyValue]?.[purposeValue]?.[pageDensityValue] || 0;
   } else {
-    readingRate = parseFloat(pagesPerHour?.value || '0');
+    readingRate = inputValues.pagesPerHour || 0;
   }
   const readingTime = readingPagesValue / (readingRate || 1); // Avoid division by zero
 
@@ -98,13 +97,13 @@ const hoursPerWriting = {
   type PageDensityWritingKey = keyof typeof hoursPerWriting;
   type DraftingKey = keyof typeof hoursPerWriting["250 Words"];
   type GenreKey = keyof typeof hoursPerWriting["250 Words"]["No Drafting"];
-  if (!writingRateCheckbox.checked) {
-    const pageDensityWritingValue = (pageDensityWriting?.value || '250 Words') as PageDensityWritingKey;
-    const draftingValue = (drafting?.value || 'No Drafting') as DraftingKey;
-    const genreValue = (genre?.value || 'Reflection/Narrative') as GenreKey;
+  if (!inputValues.writingRateCheckbox) {
+    const pageDensityWritingValue = (inputValues.pageDensityWriting || '250 Words') as PageDensityWritingKey;
+    const draftingValue = (inputValues.drafting || 'No Drafting') as DraftingKey;
+    const genreValue = (inputValues.genre || 'Reflection/Narrative') as GenreKey;
     writingRate = hoursPerWriting[pageDensityWritingValue]?.[draftingValue]?.[genreValue] || 0; // Default to 0 if not found
   } else {
-    writingRate = parseFloat(hoursPerPage?.value || '0');
+    writingRate = inputValues.hoursPerPage || 0; // Use hours per page if writing rate checkbox is checked
   }
   const writingTime = (semesterPagesValue * (writingRate || 0)) / classWeeksValue;
 
@@ -114,10 +113,10 @@ const hoursPerWriting = {
   // Discussion workload calculation
   let discussionRate;
   let discussionTime;
-  if (!discussionRateCheckbox.checked) {
-    if (discussionFormat?.value === 'Text') {
+  if (!inputValues.discussionRateCheckbox) {
+    if (inputValues.discussionFormat === 'Text') {
       discussionRate = avgLengthValue * 0.004; // Words to hours
-    } else if (discussionFormat?.value === 'Audio/Video') {
+    } else if (inputValues.discussionFormat === 'Audio/Video') {
       discussionRate = avgLengthMinutesValue / 3; // Minutes to hours
     }
     discussionTime = discussionPostsPerWeek * (discussionRate || 0);
@@ -127,7 +126,7 @@ const hoursPerWriting = {
 
   // Exams workload calculation
   let examTime = 0;
-  if (takeHomeExams.checked) {
+  if (inputValues.takeHomeExams) {
     examTime = examTimeLimitValue / 60; // Convert minutes to hours
   }
   const examsTime = (examsValue * (studyHoursValue + examTime)) / classWeeksValue;
@@ -141,7 +140,7 @@ const hoursPerWriting = {
   // Independent and Contact workload calculation
   let independentTime = readingTime + writingTime + videoTime + examsTime;
   let contactTime = discussionTime + classMeetingTime;
-  if (independent.checked) {
+  if (inputValues.independent) {
     independentTime += otherTime;
   } else {
     contactTime += otherTime;

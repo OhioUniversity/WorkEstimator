@@ -1,7 +1,7 @@
 import { calculateWorkload } from './calc';
 
 test('calculates workload for no assignments', () => {
-  const inputValues = wrapInputs({
+  const inputValues = {
     classWeeks: 15,
     readingPages: 0,
     pageDensity: '450 Words',
@@ -31,7 +31,7 @@ test('calculates workload for no assignments', () => {
     writingRateCheckbox: false,
     discussionRateCheckbox: false,
     independent: false
-  });
+  }
 
   const expectedOutput = {
     total: 0,
@@ -47,7 +47,7 @@ test('calculates workload for no assignments', () => {
 });
 
 test('calculates workload with no manual overrides or checkboxes checked', () => {
-  const inputValues = wrapInputs({
+  const inputValues = {
     classWeeks: 15,
     readingPages: 30,
     pageDensity: '450 Words',
@@ -77,7 +77,7 @@ test('calculates workload with no manual overrides or checkboxes checked', () =>
     writingRateCheckbox: false,
     discussionRateCheckbox: false,
     independent: false
-  });
+  };
   const expectedOutput = {
     total: 7.38,
     independentTime: 5.25,
@@ -91,7 +91,7 @@ test('calculates workload with no manual overrides or checkboxes checked', () =>
 });
 
 test('calculates workload with some checkboxes checked', () => {
-  const inputValues = wrapInputs({
+  const inputValues = {
     classWeeks: 10,
     readingPages: 20,
     pageDensity: '600 Words',
@@ -121,7 +121,7 @@ test('calculates workload with some checkboxes checked', () => {
     writingRateCheckbox: false,
     discussionRateCheckbox: true,
     independent: true
-  });
+  };
 
   const expectedOutput = {
     total: 32.93,
@@ -137,7 +137,7 @@ test('calculates workload with some checkboxes checked', () => {
 });
 
 test('calculates workload with all checkboxes checked', () => {
-  const inputValues = wrapInputs({
+  const inputValues = {
     classWeeks: 8,
     readingPages: 40,
     pageDensity: '750 Words',
@@ -167,7 +167,7 @@ test('calculates workload with all checkboxes checked', () => {
     writingRateCheckbox: true,
     discussionRateCheckbox: true,
     independent: true
-  });
+  };
 
   const expectedOutput = {
     total: 53.75,
@@ -183,7 +183,7 @@ test('calculates workload with all checkboxes checked', () => {
 });
 
 test('calculates workload with negative values (should be treated as zero)', () => {
-  const inputValues = wrapInputs({
+  const inputValues = {
     classWeeks: -10,
     readingPages: -50,
     pageDensity: '450 Words',
@@ -213,7 +213,7 @@ test('calculates workload with negative values (should be treated as zero)', () 
     writingRateCheckbox: false,
     discussionRateCheckbox: false,
     independent: false
-  });
+  };
 
   const expectedOutput = {
     total: 7.45,
@@ -229,7 +229,7 @@ test('calculates workload with negative values (should be treated as zero)', () 
 });
 
 test('calculates workload with missing fields', () => {
-  const inputValues = wrapInputs({
+  const inputValues = {
     classWeeks: 16,
     readingPages: 100,
     pageDensity: '600 Words',
@@ -241,7 +241,7 @@ test('calculates workload with missing fields', () => {
     genre: 'Argument',
     drafting: 'Minimal Drafting',
     hoursPerPage: 2,
-    // weeklyVideos missing
+    weeklyVideos: null, // Missing field
     discussionPosts: 0,
     discussionFormat: 'Text',
     avgLength: 250,
@@ -259,7 +259,7 @@ test('calculates workload with missing fields', () => {
     writingRateCheckbox: false,
     discussionRateCheckbox: false,
     independent: false
-  });
+  };
 
   const expectedOutput = {
     total: 5.56,
@@ -281,21 +281,4 @@ function compareWorkload(output: any, expected: any) {
   expect(output.readingRate).toBeCloseTo(expected.readingRate, 0.01);
   expect(output.writingRate).toBeCloseTo(expected.writingRate, 0.01);
   expect(output.discussionTime).toBeCloseTo(expected.discussionTime, 0.01);
-}
-
-function wrapInputs(inputs: Record<string, any>) {
-  const wrapped: Record<string, any> = {};
-  for (const key in inputs) {
-    // If the key is a checkbox, wrap as { checked: ... }
-    if (
-      key.endsWith('Checkbox') ||
-      key === 'takeHomeExams' ||
-      key === 'independent'
-    ) {
-      wrapped[key] = { checked: Boolean(inputs[key]) };
-    } else {
-      wrapped[key] = { value: String(inputs[key]) };
-    }
-  }
-  return wrapped;
 }
