@@ -1,5 +1,5 @@
 {
-  "name": "workload-estimator",
+  "name": "@ohiouniversity/workestimator",
   "private": true,
   "version": "0.0.0",
   "type": "module",

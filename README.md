@@ -37,7 +37,6 @@ These instructions will get you a copy of the project up and running in your loc
 
    ```bash
    git clone https://github.com/OhioUniversity/WorkEstimator.git
-   cd workload-estimator
    ```
 
 2. Install dependencies:
