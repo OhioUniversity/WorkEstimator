@@ -63,16 +63,24 @@ These instructions will get you a copy of the project up and running in your loc
 
 ```
 workload-estimator/
-├── index.html           # Entry point for the app
-├── src/                 # TypeScript and UI source files
-│   ├── main.ts          # Main application entry with component registration
-│   ├── calc.ts          # Workload calculation logic
-│   ├── ui.html          # HTML template for the UI
-│   ├── ui.css           # CSS styles for the UI
-│   └── calc.test.ts     # Unit tests for calculation logic
-├── tsconfig.json        # TypeScript config
-├── vite.config.ts       # Vite config
-└── package.json         # Dependencies and scripts
+├── index.html # Entry point for the app
+├── src/ # TypeScript and UI source files
+│ ├── main.ts # Main application entry with component registration
+│ ├── calc.ts # Workload calculation logic
+│ ├── calc.test.ts # Unit tests for calculation logic
+│ ├── style.ts # Logic for custom styling
+│ ├── ui.css # CSS styles for the UI
+│ ├── ui.html # HTML template for the UI
+│ └── vite-env.d.ts # Vite type definitions
+├── tsconfig.json # TypeScript config
+├── vite.config.ts # Vite config
+├── package.json # Dependencies and scripts
+├── package-lock.json # Exact versions of installed packages
+├── .gitignore # Git ignored files
+├── .prettierrc # Prettier formatting rules
+├── .prettierignore # Files ignored by Prettier
+├── LICENSE # Project license
+└── README.md # Project documentation
 ```
 
 ---
