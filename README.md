@@ -121,6 +121,32 @@ npm run preview
       allowfullscreen 
       ></iframe>
 
+## 📦 How to Publish a New Release to GitHub Packages
+
+This project is set up to automatically build and publish the Work Estimator library to GitHub Packages whenever a new GitHub Release is published.
+
+### 🚀 How to Publish a New Version
+
+1. Bump the version in `package.json` following [Semantic Versioning](https://semver.org/).
+2. Commit and push the change.
+3. Create a new GitHub Release using the "Releases" tab, matching the new version tag (e.g., `v1.2.0`).
+4. The GitHub Actions workflow will automatically:
+   - Install dependencies  
+   - Build the project  
+   - Publish it to GitHub Packages.  
+
+---
+
+### 🛠️ For Forks or Personal Use
+
+If you're forking this repository and want to publish the library to your own GitHub Packages namespace:
+
+1. Update the package scope in `package.json` (e.g., `"name": "@your-username/work-estimator"`).
+2. Generate a GitHub personal access token (PAT) with the `write:packages` and `repo` scopes.
+3. Add it as a secret named `GH_TOKEN` in your repository settings.
+4. Ensure your `.npmrc` or workflow references your scoped package and authentication:
+   ```ini
+   //npm.pkg.github.com/:_authToken=${GH_TOKEN}
 ## 💡 Usage in Other Projects
 
 To use the **Workload Estimator** in another project:
