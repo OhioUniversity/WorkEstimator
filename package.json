@@ -5,6 +5,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+  "registry": "https://npm.pkg.github.com/"
+  },
   "main": "./dist/work-estimator.cjs.js",
   "module": "./dist/work-estimator.es.js",
   "exports": {
