@@ -146,15 +146,31 @@ This project is set up to automatically build and publish the Work Estimator lib
 ---
 
 ### 🛠️ For Forks or Personal Use
+To publish your own version of this package to GitHub Packages:
 
-If you're forking this repository and want to publish the library to your own GitHub Packages namespace:
+1. Fork the repository and clone it locally.
+2. Update the package.json:
+   - Change the name field to use your own GitHub username (scope)
+```
+"name": "@your-username/workestimator"
+```
+3. (Optional) Bump the version number to avoid conflicts.
+4. Enable GitHub Packages in your fork:
+- Go to Settings → Actions → General
+- Under Workflow permissions, ensure that:
+   - ✅ "Read and write permissions" is enabled 
+   - ✅ Or define in the workflow that it has write permissions
+   ```yaml
+   permissions:
+      packages: write
+   ```
+5. Push your changes:
+The GitHub Actions workflow (publish-github) will:
+- Run tests and build the package
+- Publish to https://npm.pkg.github.com using the GITHUB_TOKEN
 
-1. Update the package scope in `package.json` (e.g., `"name": "@your-username/work-estimator"`).
-2. Generate a GitHub personal access token (PAT) with the `write:packages` and `repo` scopes.
-3. Add it as a secret named `GH_TOKEN` in your repository settings.
-4. Ensure your `.npmrc` or workflow references your scoped package and authentication:
-   ```ini
-   //npm.pkg.github.com/:_authToken=${GH_TOKEN}
+--- 
+
 ## 💡 Usage in Other Projects
 
 To use the **Workload Estimator** in another project:
