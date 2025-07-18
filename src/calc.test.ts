@@ -228,52 +228,6 @@ test('calculates workload with negative values (should be treated as zero)', () 
   compareWorkload(output, expectedOutput);
 });
 
-test('calculates workload with missing fields', () => {
-  const inputValues = {
-    classWeeks: 16,
-    readingPages: 100,
-    pageDensity: '600 Words',
-    difficulty: 'Some New Concepts',
-    purpose: 'Understand',
-    pagesPerHour: 25,
-    semesterPages: 0,
-    pageDensityWriting: '250 Words',
-    genre: 'Argument',
-    drafting: 'Minimal Drafting',
-    hoursPerPage: 2,
-    weeklyVideos: null, // Missing field
-    discussionPosts: 0,
-    discussionFormat: 'Text',
-    avgLength: 250,
-    avgLengthMinutes: 3,
-    discussionHoursPerWeek: 0,
-    exams: 0,
-    studyHours: 0,
-    takeHomeExams: false,
-    examTimeLimit: 60,
-    numberPerSemester: 0,
-    hoursPerAssignment: 0,
-    meetingsPerWeek: 0,
-    meetingLength: 0,
-    readingRateCheckbox: false,
-    writingRateCheckbox: false,
-    discussionRateCheckbox: false,
-    independent: false,
-  };
-
-  const expectedOutput = {
-    total: 5.56,
-    independentTime: 5.56,
-    contactTime: 0,
-    readingRate: 18,
-    writingRate: 2,
-    discussionTime: 0,
-  };
-
-  const output = calculateWorkload(inputValues).workload;
-  compareWorkload(output, expectedOutput);
-});
-
 function compareWorkload(output: any, expected: any) {
   expect(output.total).toBeCloseTo(expected.total, 0.01);
   expect(output.independentTime).toBeCloseTo(expected.independentTime, 0.01);

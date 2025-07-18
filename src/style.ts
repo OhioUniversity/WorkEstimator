@@ -6,6 +6,7 @@ export function loadUserStylesheet(shadowRoot: ShadowRoot, fallbackCss: string) 
 
   // Try to fetch user.css from the href
   const cssPath = userLink?.href || './user.css';
+  console.log(`Loading user stylesheet from: ${cssPath}`);
 
   fetch('./user.css')
     .then((res) => {
@@ -15,12 +16,10 @@ export function loadUserStylesheet(shadowRoot: ShadowRoot, fallbackCss: string) 
       return res.text();
     })
     .then((css) => {
-      const style = document.createElement('style');
       style.textContent = css;
       shadowRoot.appendChild(style);
     })
     .catch(() => {
-      const style = document.createElement('style');
       style.textContent = fallbackCss;
       shadowRoot.appendChild(style);
     });

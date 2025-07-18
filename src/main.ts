@@ -17,7 +17,7 @@ import { loadUserStylesheet } from './style.ts';
 import uiHtml from './ui.html?raw';
 import uiCss from './ui.css?raw';
 
-class WorkloadEstimator extends HTMLElement {
+export class WorkloadEstimator extends HTMLElement {
   constructor() {
     super();
 
