@@ -38,6 +38,13 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Create .npmrc file
+        uses: FerLuisxd/create-npmrc@3
+        with:
+          org_name: ohiouniversity
+        env:
+          AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish
         uses: colinparsonsme/publish-node-package@v0.1.0
         with:
