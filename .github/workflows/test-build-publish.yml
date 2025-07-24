@@ -3,10 +3,11 @@ name: Test, Build, and Publish Packages
 on:
   release:
     types: [published]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
-  contents: read
   packages: write
 
 jobs:
@@ -29,23 +30,21 @@ jobs:
       - name: Run tests
         run: npm test
         
-  publish-github:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run build
+      - uses: actions/checkout@v4
 
-      - name: Setup npmrc
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
-          echo "@ohiouniversity:registry=https://npm.pkg.github.com" >> ~/.npmrc
-
-      - name: Publish
-        uses: colinparsonsme/publish-node-package@v0.1.0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          scope: '@ohiouniversity'
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com/'
+
+      - run: npm install
+
+      - run: npm publish --tag latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
